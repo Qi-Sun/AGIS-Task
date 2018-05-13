@@ -10,16 +10,21 @@ namespace AGIS_work.DataStructure
     public class PointSet
     {
         public string SetName { get; private set; }
-        public string FileName { get; private set; }
+        public string FileName { get; private set; }       
 
         public List<DataPoint> PointList { get; private set; }
+        public MinBoundRect MBR { get; private set; }
 
-        public PointSet() { }
+        public PointSet() { MBR = new MinBoundRect(-1, -1, 1, 1); }
         public PointSet(string setname,string filename, DataPoint[] points)
         {
             this.SetName = setname;
             this.FileName = filename;
             this.PointList = new List<DataPoint>(points);
+            //最小外接矩形
+            MBR = new MinBoundRect();
+            foreach (DataPoint point in points)
+                MBR.UpdateRect(point.X, point.Y);
         }
 
         /// <summary>
@@ -75,7 +80,7 @@ namespace AGIS_work.DataStructure
             }
             sw.Close();
             return;
-        }
+        }    
 
     }
 }

@@ -16,6 +16,7 @@ namespace AGIS_work.DataStructure_Test
         {
             //Console.WriteLine(Environment.CurrentDirectory.ToString());
             PointSet pointSet = PointSet.ReadFromCSV("..//..//Data//TestData.csv");
+            Assert.True(pointSet.PointList.Count == 43);
         }
     }
 }
