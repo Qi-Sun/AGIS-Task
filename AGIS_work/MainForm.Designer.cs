@@ -64,8 +64,19 @@
             this.帮助ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.作者信息ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.程序信息ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel_X = new System.Windows.Forms.ToolStripStatusLabel();
+            this.StatusLabel_X = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel_Y = new System.Windows.Forms.ToolStripStatusLabel();
+            this.StatusLabel_Y = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabelScreenX = new System.Windows.Forms.ToolStripStatusLabel();
+            this.StatusLabelScreenX = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabelScreenY = new System.Windows.Forms.ToolStripStatusLabel();
+            this.StatusLabelScreenY = new System.Windows.Forms.ToolStripStatusLabel();
             this.agisControl = new AGIS_work.AgisControl();
+            this.生成格网ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -124,6 +135,7 @@
             this.距离平方倒数法ToolStripMenuItem,
             this.按方位加权平均法ToolStripMenuItem,
             this.toolStripSeparator3,
+            this.生成格网ToolStripMenuItem,
             this.加密网格toolStripMenuItem,
             this.查询节点属性ToolStripMenuItem,
             this.toolStripSeparator1,
@@ -139,12 +151,14 @@
             this.距离平方倒数法ToolStripMenuItem.Name = "距离平方倒数法ToolStripMenuItem";
             this.距离平方倒数法ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.距离平方倒数法ToolStripMenuItem.Text = "距离平方倒数法";
+            this.距离平方倒数法ToolStripMenuItem.Click += new System.EventHandler(this.距离平方倒数法ToolStripMenuItem_Click);
             // 
             // 按方位加权平均法ToolStripMenuItem
             // 
             this.按方位加权平均法ToolStripMenuItem.Name = "按方位加权平均法ToolStripMenuItem";
             this.按方位加权平均法ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.按方位加权平均法ToolStripMenuItem.Text = "按方位加权平均法";
+            this.按方位加权平均法ToolStripMenuItem.Click += new System.EventHandler(this.按方位加权平均法ToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
@@ -156,12 +170,14 @@
             this.加密网格toolStripMenuItem.Name = "加密网格toolStripMenuItem";
             this.加密网格toolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.加密网格toolStripMenuItem.Text = "加密网格";
+            this.加密网格toolStripMenuItem.Click += new System.EventHandler(this.加密网格toolStripMenuItem_Click);
             // 
             // 查询节点属性ToolStripMenuItem
             // 
             this.查询节点属性ToolStripMenuItem.Name = "查询节点属性ToolStripMenuItem";
             this.查询节点属性ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.查询节点属性ToolStripMenuItem.Text = "查询节点属性";
+            this.查询节点属性ToolStripMenuItem.Click += new System.EventHandler(this.查询节点属性ToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -173,6 +189,7 @@
             this.生成等值线ToolStripMenuItem.Name = "生成等值线ToolStripMenuItem";
             this.生成等值线ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.生成等值线ToolStripMenuItem.Text = "生成等值线";
+            this.生成等值线ToolStripMenuItem.Click += new System.EventHandler(this.生成等值线ToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
@@ -187,12 +204,15 @@
             this.设置ToolStripMenuItem.Name = "设置ToolStripMenuItem";
             this.设置ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.设置ToolStripMenuItem.Text = "设置";
+            this.设置ToolStripMenuItem.Click += new System.EventHandler(this.设置ToolStripMenuItem_Click);
             // 
             // 显示隐藏格网ToolStripMenuItem
             // 
+            this.显示隐藏格网ToolStripMenuItem.CheckOnClick = true;
             this.显示隐藏格网ToolStripMenuItem.Name = "显示隐藏格网ToolStripMenuItem";
             this.显示隐藏格网ToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
             this.显示隐藏格网ToolStripMenuItem.Text = "显示/隐藏格网";
+            this.显示隐藏格网ToolStripMenuItem.Click += new System.EventHandler(this.显示隐藏格网ToolStripMenuItem_Click);
             // 
             // 清除格网ToolStripMenuItem
             // 
@@ -215,24 +235,26 @@
             // 逐点插入法ToolStripMenuItem
             // 
             this.逐点插入法ToolStripMenuItem.Name = "逐点插入法ToolStripMenuItem";
-            this.逐点插入法ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.逐点插入法ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.逐点插入法ToolStripMenuItem.Text = "逐点插入法";
+            this.逐点插入法ToolStripMenuItem.Click += new System.EventHandler(this.逐点插入法ToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(133, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(149, 6);
             // 
             // 生成等值线ToolStripMenuItem1
             // 
             this.生成等值线ToolStripMenuItem1.Name = "生成等值线ToolStripMenuItem1";
-            this.生成等值线ToolStripMenuItem1.Size = new System.Drawing.Size(136, 22);
+            this.生成等值线ToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.生成等值线ToolStripMenuItem1.Text = "生成等值线";
+            this.生成等值线ToolStripMenuItem1.Click += new System.EventHandler(this.生成等值线ToolStripMenuItem1_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(133, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(149, 6);
             // 
             // 设置ToolStripMenuItem1
             // 
@@ -240,8 +262,9 @@
             this.显示隐藏TINToolStripMenuItem,
             this.清楚TINToolStripMenuItem});
             this.设置ToolStripMenuItem1.Name = "设置ToolStripMenuItem1";
-            this.设置ToolStripMenuItem1.Size = new System.Drawing.Size(136, 22);
+            this.设置ToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.设置ToolStripMenuItem1.Text = "设置";
+            this.设置ToolStripMenuItem1.Click += new System.EventHandler(this.设置ToolStripMenuItem1_Click);
             // 
             // 显示隐藏TINToolStripMenuItem
             // 
@@ -271,24 +294,28 @@
             this.生成拓扑关系ToolStripMenuItem.Name = "生成拓扑关系ToolStripMenuItem";
             this.生成拓扑关系ToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.生成拓扑关系ToolStripMenuItem.Text = "生成拓扑关系";
+            this.生成拓扑关系ToolStripMenuItem.Click += new System.EventHandler(this.生成拓扑关系ToolStripMenuItem_Click);
             // 
             // 可视化ToolStripMenuItem
             // 
             this.可视化ToolStripMenuItem.Name = "可视化ToolStripMenuItem";
             this.可视化ToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.可视化ToolStripMenuItem.Text = "可视化";
+            this.可视化ToolStripMenuItem.Click += new System.EventHandler(this.可视化ToolStripMenuItem_Click);
             // 
             // 查询ToolStripMenuItem
             // 
             this.查询ToolStripMenuItem.Name = "查询ToolStripMenuItem";
             this.查询ToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.查询ToolStripMenuItem.Text = "查询";
+            this.查询ToolStripMenuItem.Click += new System.EventHandler(this.查询ToolStripMenuItem_Click);
             // 
             // 导出拓扑关系表ToolStripMenuItem
             // 
             this.导出拓扑关系表ToolStripMenuItem.Name = "导出拓扑关系表ToolStripMenuItem";
             this.导出拓扑关系表ToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.导出拓扑关系表ToolStripMenuItem.Text = "导出拓扑关系表";
+            this.导出拓扑关系表ToolStripMenuItem.Click += new System.EventHandler(this.导出拓扑关系表ToolStripMenuItem_Click);
             // 
             // 帮助ToolStripMenuItem
             // 
@@ -310,6 +337,72 @@
             this.程序信息ToolStripMenuItem.Name = "程序信息ToolStripMenuItem";
             this.程序信息ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.程序信息ToolStripMenuItem.Text = "程序信息";
+            this.程序信息ToolStripMenuItem.Click += new System.EventHandler(this.程序信息ToolStripMenuItem_Click);
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel_X,
+            this.StatusLabel_X,
+            this.toolStripStatusLabel_Y,
+            this.StatusLabel_Y,
+            this.toolStripStatusLabelScreenX,
+            this.StatusLabelScreenX,
+            this.toolStripStatusLabelScreenY,
+            this.StatusLabelScreenY});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 490);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(762, 22);
+            this.statusStrip1.TabIndex = 2;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel_X
+            // 
+            this.toolStripStatusLabel_X.Name = "toolStripStatusLabel_X";
+            this.toolStripStatusLabel_X.Size = new System.Drawing.Size(19, 17);
+            this.toolStripStatusLabel_X.Text = "X:";
+            // 
+            // StatusLabel_X
+            // 
+            this.StatusLabel_X.Name = "StatusLabel_X";
+            this.StatusLabel_X.Size = new System.Drawing.Size(25, 17);
+            this.StatusLabel_X.Text = "0.0";
+            // 
+            // toolStripStatusLabel_Y
+            // 
+            this.toolStripStatusLabel_Y.Name = "toolStripStatusLabel_Y";
+            this.toolStripStatusLabel_Y.Size = new System.Drawing.Size(18, 17);
+            this.toolStripStatusLabel_Y.Text = "Y:";
+            // 
+            // StatusLabel_Y
+            // 
+            this.StatusLabel_Y.Name = "StatusLabel_Y";
+            this.StatusLabel_Y.Size = new System.Drawing.Size(25, 17);
+            this.StatusLabel_Y.Text = "0.0";
+            // 
+            // toolStripStatusLabelScreenX
+            // 
+            this.toolStripStatusLabelScreenX.Name = "toolStripStatusLabelScreenX";
+            this.toolStripStatusLabelScreenX.Size = new System.Drawing.Size(58, 17);
+            this.toolStripStatusLabelScreenX.Text = "ScreenX:";
+            // 
+            // StatusLabelScreenX
+            // 
+            this.StatusLabelScreenX.Name = "StatusLabelScreenX";
+            this.StatusLabelScreenX.Size = new System.Drawing.Size(25, 17);
+            this.StatusLabelScreenX.Text = "0.0";
+            // 
+            // toolStripStatusLabelScreenY
+            // 
+            this.toolStripStatusLabelScreenY.Name = "toolStripStatusLabelScreenY";
+            this.toolStripStatusLabelScreenY.Size = new System.Drawing.Size(57, 17);
+            this.toolStripStatusLabelScreenY.Text = "ScreenY:";
+            // 
+            // StatusLabelScreenY
+            // 
+            this.StatusLabelScreenY.Name = "StatusLabelScreenY";
+            this.StatusLabelScreenY.Size = new System.Drawing.Size(25, 17);
+            this.StatusLabelScreenY.Text = "0.0";
             // 
             // agisControl
             // 
@@ -317,27 +410,38 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.agisControl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.agisControl.CenterPoint = ((System.Drawing.PointF)(resources.GetObject("agisControl.CenterPoint")));
             this.agisControl.Location = new System.Drawing.Point(0, 25);
-            this.agisControl.MBR = minBoundRect1;
             this.agisControl.Name = "agisControl";
-            this.agisControl.Scale = 1D;
-            this.agisControl.Size = new System.Drawing.Size(762, 487);
+            this.agisControl.Size = new System.Drawing.Size(762, 462);
             this.agisControl.TabIndex = 1;
+            this.agisControl.Paint += new System.Windows.Forms.PaintEventHandler(this.agisControl_Paint);
+            this.agisControl.MouseHover += new System.EventHandler(this.agisControl_MouseHover);
+            this.agisControl.MouseMove += new System.Windows.Forms.MouseEventHandler(this.agisControl_MouseMove);
+            // 
+            // 生成格网ToolStripMenuItem
+            // 
+            this.生成格网ToolStripMenuItem.Name = "生成格网ToolStripMenuItem";
+            this.生成格网ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.生成格网ToolStripMenuItem.Text = "生成格网";
+            this.生成格网ToolStripMenuItem.Click += new System.EventHandler(this.生成格网ToolStripMenuItem_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(762, 512);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.agisControl);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "高级GIS 课程作业";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -380,6 +484,16 @@
         private System.Windows.Forms.ToolStripMenuItem 作者信息ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 程序信息ToolStripMenuItem;
         private AgisControl agisControl;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_X;
+        private System.Windows.Forms.ToolStripStatusLabel StatusLabel_X;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_Y;
+        private System.Windows.Forms.ToolStripStatusLabel StatusLabel_Y;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelScreenX;
+        private System.Windows.Forms.ToolStripStatusLabel StatusLabelScreenX;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelScreenY;
+        private System.Windows.Forms.ToolStripStatusLabel StatusLabelScreenY;
+        private System.Windows.Forms.ToolStripMenuItem 生成格网ToolStripMenuItem;
     }
 }
 

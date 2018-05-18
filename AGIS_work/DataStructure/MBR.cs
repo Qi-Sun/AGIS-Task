@@ -36,5 +36,21 @@ namespace AGIS_work.DataStructure
             this.MaxY = Math.Max(this.MaxY, y);
             return;
         }
+
+        public void PanningVector(double deltaX,double deltaY)
+        {
+            this.MinX += deltaX;
+            this.MinY += deltaY;
+            this.MaxX += deltaX;
+            this.MaxY += deltaY;
+        }
+
+        public void ZoomPointAndRatio(double x,double y,double ratio)
+        {
+            this.MinX = x - (x - this.MinX) * ratio;
+            this.MinY = y - (y - this.MinY) * ratio;
+            this.MaxX = (this.MaxX - x) * ratio + x;
+            this.MaxY = (this.MaxY - y) * ratio + y;
+        }
     }
 }

@@ -38,6 +38,10 @@
             this.Size = new System.Drawing.Size(342, 330);
             this.Load += new System.EventHandler(this.AgisControl_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.AgisControl_Paint);
+            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.AgisControl_MouseClick);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.AgisControl_MouseDown);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.AgisControl_MouseMove);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.AgisControl_MouseUp);
             this.Resize += new System.EventHandler(this.AgisControl_Resize);
             this.ResumeLayout(false);
 
