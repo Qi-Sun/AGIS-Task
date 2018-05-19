@@ -29,3 +29,5 @@ F:\5-2\高级GIS\AGIS_work\AGIS_work\obj\Debug\AGIS_work.pdb
 F:\5-2\高级GIS\AGIS_work\AGIS_work\obj\Debug\AGIS_work.Forms.File.OpenFileForm.resources
 F:\5-2\高级GIS\AGIS_work\AGIS_work\obj\Debug\AGIS_work.AgisControl.resources
 F:\5-2\高级GIS\AGIS_work\AGIS_work\obj\Debug\AGIS_work.Forms.Grid.GenerateGridForm.resources
+F:\5-2\高级GIS\AGIS_work\AGIS_work\obj\Debug\AGIS_work.Forms.Grid.GenerateSubGridForm.resources
+F:\5-2\高级GIS\AGIS_work\AGIS_work\obj\Debug\AGIS_work.Forms.Grid.GridIntParaForm.resources

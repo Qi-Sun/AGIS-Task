@@ -104,6 +104,18 @@
     <Compile Include="Forms\Grid\GenerateGridForm.Designer.cs">
       <DependentUpon>GenerateGridForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Grid\GenerateSubGridForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Grid\GenerateSubGridForm.Designer.cs">
+      <DependentUpon>GenerateSubGridForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Grid\GridIntParaForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Grid\GridIntParaForm.Designer.cs">
+      <DependentUpon>GridIntParaForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -121,6 +133,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Grid\GenerateGridForm.resx">
       <DependentUpon>GenerateGridForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Grid\GenerateSubGridForm.resx">
+      <DependentUpon>GenerateSubGridForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Grid\GridIntParaForm.resx">
+      <DependentUpon>GridIntParaForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

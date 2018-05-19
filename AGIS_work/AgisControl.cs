@@ -52,6 +52,9 @@ namespace AGIS_work
         public double OffsetX = 0;
         public double OffsetY = 0;
 
+        //格网差值
+        public int 距离平方倒数法NearPts = -1;
+        public int 按方位加权平均法SectorNum = -1;
         public GridInterpolationMehtod GridIntMethod = GridInterpolationMehtod.None;
 
         public bool LoadPointSet(PointSet pointset, double frameScaling = 1.2)
@@ -124,6 +127,25 @@ namespace AGIS_work
         }
 
         /// <summary>
+        /// 单独获取实际坐标点X轴在屏幕上的位置
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        public double GetScreenLocX(double x)
+        {
+            return (x - this.OffsetX) * this.Zoom;
+        }
+        /// <summary>
+        /// 单独获取实际坐标点Y轴在屏幕上的位置
+        /// </summary>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public double GetScreenLocY(double y)
+        {
+            return this.Height - (float)((y - this.OffsetY) * this.Zoom);
+        }
+
+        /// <summary>
         /// 获取屏幕点的实际位置。
         /// </summary>
         /// <param name="x"></param>
@@ -134,6 +156,16 @@ namespace AGIS_work
             return new double[] { (x / this.Zoom + this.OffsetX),
                 ((this.Height - y) / this.Zoom + this.OffsetY) };
            
+        }
+
+        public double GetRealWorldLocX(float x)
+        {
+            return x / this.Zoom + this.OffsetX;
+        }
+
+        public double GetRealWorldLocY(float y)
+        {
+            return (this.Height - y) / this.Zoom + this.OffsetY;
         }
 
         private void AgisControl_Resize(object sender, EventArgs e)
