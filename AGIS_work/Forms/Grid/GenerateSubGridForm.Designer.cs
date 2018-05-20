@@ -40,6 +40,7 @@
             // 
             // bttnCancel
             // 
+            this.bttnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.bttnCancel.Location = new System.Drawing.Point(260, 124);
             this.bttnCancel.Name = "bttnCancel";
             this.bttnCancel.Size = new System.Drawing.Size(75, 23);
@@ -122,8 +123,10 @@
             // 
             // GenerateSubGridForm
             // 
+            this.AcceptButton = this.bttnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.bttnCancel;
             this.ClientSize = new System.Drawing.Size(345, 163);
             this.Controls.Add(this.bttnCancel);
             this.Controls.Add(this.bttnOK);

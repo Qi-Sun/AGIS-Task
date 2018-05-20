@@ -169,10 +169,7 @@ namespace AGIS_work
         private void 距离平方倒数法ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //this.agisControl.SetUserOperationToDisplayInGrid();
-            this.UserOperation = UserOperationType.DisplayInGrid;
-            this.agisControl.GridIntMethod = Mehtod.GridInterpolationMehtod.距离平方倒数法;
-            按方位加权平均法ToolStripMenuItem.Checked = false;
-            距离平方倒数法ToolStripMenuItem.Checked = true;
+            
             if (agisControl.PointSet == null) return;
             int tempPara = agisControl.距离平方倒数法NearPts;
             if (tempPara < 0)
@@ -180,6 +177,10 @@ namespace AGIS_work
             GridIntParaForm form = new GridIntParaForm("取插值点邻域内最近的N个点", tempPara, 1, agisControl.PointSet.PointList.Count);
             if (form.ShowDialog(this) == DialogResult.OK)
             {
+                this.UserOperation = UserOperationType.DisplayInGrid;
+                this.agisControl.GridIntMethod = Mehtod.GridInterpolationMehtod.距离平方倒数法;
+                按方位加权平均法ToolStripMenuItem.Checked = false;
+                距离平方倒数法ToolStripMenuItem.Checked = true;
                 agisControl.距离平方倒数法NearPts = form.ParaValue;
                 MessageBox.Show("参数设置成功！", "提示");
             }
@@ -188,11 +189,6 @@ namespace AGIS_work
         private void 按方位加权平均法ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //this.agisControl.SetUserOperationToDisplayInGrid();
-            this.UserOperation = UserOperationType.DisplayInGrid;
-            this.agisControl.GridIntMethod = Mehtod.GridInterpolationMehtod.按方位加权平均法;
-            按方位加权平均法ToolStripMenuItem.Checked = true;
-            距离平方倒数法ToolStripMenuItem.Checked = false;
-            if (agisControl.PointSet == null) return;
             if (agisControl.PointSet == null) return;
             int tempPara = agisControl.按方位加权平均法SectorNum;
             if (tempPara < 0)
@@ -201,7 +197,11 @@ namespace AGIS_work
                 Math.Max(agisControl.PointSet.PointList.Count / 4, 1));
             if (form.ShowDialog(this) == DialogResult.OK)
             {
-                agisControl.按方位加权平均法SectorNum = form.ParaValue;
+                this.UserOperation = UserOperationType.DisplayInGrid;
+                this.agisControl.GridIntMethod = Mehtod.GridInterpolationMehtod.按方位加权平均法;
+                按方位加权平均法ToolStripMenuItem.Checked = true;
+                距离平方倒数法ToolStripMenuItem.Checked = false;
+                agisControl.按方位加权平均法SectorNum = form.ParaValue * 4;
                 MessageBox.Show("参数设置成功！", "提示");
             }
         }
@@ -377,6 +377,11 @@ namespace AGIS_work
         private void agisControl_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             MouseLocation = e.Location;
+            if (this.UserOperation != UserOperationType.DisplayInGrid
+                || GridDivisionCount_X * EachGridDivisionCount_X < 1
+                || GridDivisionCount_Y * EachGridDivisionCount_Y < 1
+                || this.IsGridVisible == false)
+                return;
             if (e.Clicks == 2 && this.IsQueryIntersection == true)
             {
                 SelectPointX = SelectPointY = 0;
@@ -392,9 +397,45 @@ namespace AGIS_work
                     if (Math.Abs(GridScreen_AxisY[i] - this.MouseLocation.Y) < this.SelectPixelThreshold)
                         SelectPointY = this.agisControl.GetRealWorldLocY((float)GridScreen_AxisY[i]);
                 }
+                //选中了格网点
+                if (SelectPointX != -1 && SelectPointY != -1 && agisControl.GridIntMethod != Mehtod.GridInterpolationMehtod.None)
+                {
+                    this.agisControl.Refresh();
+                    string MethodName = "";
+                    string Para = "";
+                    if (agisControl.GridIntMethod == Mehtod.GridInterpolationMehtod.按方位加权平均法)
+                    {
+                        if (agisControl.按方位加权平均法SectorNum < 0)
+                        {
+                            MessageBox.Show("按方位加权平均法 参数尚未设置", "错误");
+                            return;
+                        }
+                        MethodName = "按方位加权平均法";
+                        Para = string.Format("{0}:{1}", "每个象限等分扇区数N0", agisControl.按方位加权平均法SectorNum / 4);
+                    }
+                    else if (agisControl.GridIntMethod == Mehtod.GridInterpolationMehtod.距离平方倒数法)
+                    {
+                        if (agisControl.距离平方倒数法NearPts < 0)
+                        {
+                            MessageBox.Show("距离平方倒数法 参数尚未设置", "错误");
+                            return;
+                        }
+                        MethodName = "距离平方倒数法";
+                        Para = string.Format("{0}:{1}", "选取距插值点最近的N个点", agisControl.距离平方倒数法NearPts);
+                    }
+                    MessageBox.Show(string.Format("{0}\t\r\n{1}\t\n{2}\t\r\n{3}\r\n\r\n{4}\r\n{5}",
+                        "格网点属性信息：", SelectPointX.ToString("0.00"), SelectPointY.ToString("0.00"),
+                        agisControl.GetGridInterpolationValue(SelectPointX, SelectPointY).ToString("0.000"),
+                        "插值方法：" + MethodName, Para
+                        ), "属性查询");
+                }
             }
-            this.agisControl.Refresh();
-            //TODO插值
+            
+        }
+
+        private void agisControl_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

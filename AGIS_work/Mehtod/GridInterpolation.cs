@@ -44,6 +44,8 @@ namespace AGIS_work.Mehtod
         {
             List<Tuple<DataPoint, double>>[] PointPositionDistanceList
                 = new List<Tuple<DataPoint, double>>[sectorNums];
+            for (int i = 0; i < sectorNums; i++)
+                PointPositionDistanceList[i] = new List<Tuple<DataPoint, double>>();
             double sectorArc = 360.0 / sectorNums;
             foreach (var point in mPointSet.PointList)
             {

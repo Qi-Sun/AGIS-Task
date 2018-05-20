@@ -419,6 +419,7 @@
             this.agisControl.Name = "agisControl";
             this.agisControl.Size = new System.Drawing.Size(762, 462);
             this.agisControl.TabIndex = 1;
+            this.agisControl.Load += new System.EventHandler(this.agisControl_Load);
             this.agisControl.Paint += new System.Windows.Forms.PaintEventHandler(this.agisControl_Paint);
             this.agisControl.MouseClick += new System.Windows.Forms.MouseEventHandler(this.agisControl_MouseClick);
             this.agisControl.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.agisControl_MouseDoubleClick);

@@ -241,5 +241,21 @@ namespace AGIS_work
             this.IsPanning = false;
             this.CurMouseLocation = e.Location;
         }
+
+        public double GetGridInterpolationValue(double x,double y)
+        {
+            GridInterpolation method = new GridInterpolation(this.PointSet);
+            switch (this.GridIntMethod)
+            {
+                case GridInterpolationMehtod.None:
+                    throw new Exception("未选择插值方法");
+                case GridInterpolationMehtod.距离平方倒数法:
+                    return method.CalculateValueBy距离平方倒数法(x, y, 距离平方倒数法NearPts);
+                case GridInterpolationMehtod.按方位加权平均法:
+                    return method.CalculateValueBy按方位加权平均法(x, y, 按方位加权平均法SectorNum);
+                default:
+                    throw new Exception("未选择插值方法");
+            }
+        }
     }
 }
