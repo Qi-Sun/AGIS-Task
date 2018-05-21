@@ -86,5 +86,11 @@ namespace AGIS_work.DataStructure
             }
 
         }
+
+        public static Vector2D operator - (DataPoint p1 ,DataPoint p2)
+        {
+            return new Vector2D(p1.X - p2.X, p1.Y - p2.Y);
+        }
+          
     }
 }
