@@ -8,13 +8,21 @@ namespace AGIS_work.DataStructure
 {
     public class Edge
     {
+        public int EID { get; private set; }
         public DataPoint StartPoint { get; private set; }
         public DataPoint EndPoint { get; private set; }
+        public int StartOID
+        { get { return StartPoint.OID; } }
+        public int EndOID
+        { get { return EndPoint.OID; } }
+        public Triangle OwnerTriangle { get; set; }
+        public object Tag { get; set; }
 
-        public Edge(DataPoint startP,DataPoint endP)
+        public Edge(DataPoint startP,DataPoint endP,int eid)
         {
             this.StartPoint = startP;
             this.EndPoint = endP;
+            this.EID = eid;
         }
         public double MaxValue()
         {
@@ -34,5 +42,12 @@ namespace AGIS_work.DataStructure
         {
             return ralativeCoordinate * (EndPoint.Value - StartPoint.Value) + StartPoint.Value;
         }
+
+        public bool IsEqulesEdge(int oid1,int oid2)
+        {
+            return ((StartPoint.OID == oid1) && (EndPoint.OID == oid2)||
+                (StartPoint.OID == oid2) && (EndPoint.OID == oid1));
+        }
+        
     }
 }

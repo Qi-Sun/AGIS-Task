@@ -40,12 +40,14 @@ namespace AGIS_work.DataStructure
             try
             {
                 string setName = sr.ReadLine();
+                int oid = 0;
                 while (! sr.EndOfStream)
                 {
                     string onePoint = sr.ReadLine();
                     string[] pointInfo = onePoint.Split(',');
                     dataPoints.Add(new DataPoint(int.Parse(pointInfo[0]), pointInfo[1], double.Parse(pointInfo[2]),
-                         double.Parse(pointInfo[3]), double.Parse(pointInfo[4])));
+                         double.Parse(pointInfo[3]), double.Parse(pointInfo[4]), oid));
+                    oid++;
                 }
                 pointSet = new PointSet(setName, filename, dataPoints.ToArray());
             }
@@ -82,5 +84,33 @@ namespace AGIS_work.DataStructure
             return;
         }    
 
+        /// <summary>
+        /// 根据OID返回数据点
+        /// </summary>
+        /// <param name="oid"></param>
+        /// <returns></returns>
+        public DataPoint GetPointByOID(int oid)
+        {
+            foreach (var point in PointList)
+            {
+                if (point.OID == oid)
+                    return point;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 返回全部数据点的OID
+        /// </summary>
+        /// <returns></returns>
+        public List<int> GetPointOIDList()
+        {
+            List<int> OIDList = new List<int>();
+            foreach (var point in PointList)
+            {
+                OIDList.Add(point.OID);
+            }
+            return OIDList;
+        }
     }
 }

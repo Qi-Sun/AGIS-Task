@@ -14,8 +14,9 @@ namespace AGIS_work.DataStructure
         public double Y { get; private set; }
         public double Value { get; private set; }
         public MinBoundRect MBR { get; private set; }
+        public int OID { get; private set; }
 
-        public DataPoint(int id, string name, double x, double y, double value)
+        public DataPoint(int id, string name, double x, double y, double value,int oid)
         {
             this.ID = id;
             this.Name = name;
@@ -23,6 +24,7 @@ namespace AGIS_work.DataStructure
             this.Y = y;
             this.Value = value;
             this.MBR = new MinBoundRect(x, y, x, y);
+            this.OID = oid;
         }
 
         public override string ToString()
@@ -91,6 +93,36 @@ namespace AGIS_work.DataStructure
         {
             return new Vector2D(p1.X - p2.X, p1.Y - p2.Y);
         }
-          
+
+        public static double Angle(DataPoint c, DataPoint a, DataPoint b)
+        {
+            double ang;
+            double l1 = Math.Sqrt((b.X - c.X) * (b.X - c.X) + (b.Y - c.Y) * (b.Y - c.Y));
+            double l2 = Math.Sqrt((a.X - c.X) * (a.X - c.X) + (a.Y - c.Y) * (a.Y - c.Y));
+            double l3 = Math.Sqrt((b.X - a.X) * (b.X - a.X) + (b.Y - a.Y) * (b.Y - a.Y));
+            ang = Math.Acos((l1 * l1 + l2 * l2 - l3 * l3) / (2 * l1 * l2));
+            return ang;
+        }
+
+        public static int LeftOrRight(DataPoint c, DataPoint a, DataPoint b)
+        {
+            int youbian;
+            double S;
+            S = (a.X - c.X) * (b.Y - c.Y) - (a.Y - c.Y) * (b.X - c.X);
+            if (S > 0)
+            {
+                youbian = 1;
+            }
+            else if (S < 0)
+            {
+                youbian = -1;
+            }
+            else
+            {
+                youbian = 0;
+            }
+            return youbian;
+        }
+
     }
 }

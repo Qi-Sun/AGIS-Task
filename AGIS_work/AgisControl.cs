@@ -30,7 +30,7 @@ namespace AGIS_work
         public AgisControl()
         {
             InitializeComponent();
-            Scale = 1;
+            ZoomScale = 1;
             CenterPoint = new PointF(0, 0);
             this.MouseWheel += this.AgisControl_MouseWheel;
         }
@@ -42,9 +42,9 @@ namespace AGIS_work
 
         public MinBoundRect MBR_Origin { get; private set; }
         public PointF CenterPoint { get; private set; }
-        public double Scale { get; private  set; }   //  Screen / RawData
+        public double ZoomScale { get; private  set; }   //  Screen / RawData
         public Brush PointBrush = new SolidBrush(Color.Indigo);
-        public float PointRadius = 3;
+        public double PointRadius = 3;
         public double FrameScaling = 1.2;
         public double Zoom = 1;
         public PointF CurMouseLocation;
@@ -69,7 +69,7 @@ namespace AGIS_work
                     (float)(pointMBR.MaxY + pointMBR.MinY) / 2);
                 double pointSetWidth = pointMBR.MaxX - pointMBR.MinX;
                 double pointSetHeight = pointMBR.MaxY - pointMBR.MinY;
-                this.Scale = Math.Min(this.Height / (pointSetHeight),
+                this.ZoomScale = Math.Min(this.Height / (pointSetHeight),
                     this.Width / (pointSetWidth)) / frameScaling;
                 MBR_Origin = new MinBoundRect(CenterPoint.X - pointSetWidth * frameScaling / 2,
                     CenterPoint.Y - pointSetHeight * frameScaling / 2,
@@ -77,7 +77,7 @@ namespace AGIS_work
                     CenterPoint.Y + pointSetHeight * frameScaling / 2);
                 OffsetX = MBR_Origin.MinX;
                 OffsetY = MBR_Origin.MinY;
-                Zoom = Scale;
+                Zoom = ZoomScale;
                 UserOperation = UserOperationType.DisplayThePointSet;
                 return true;
             }
@@ -93,20 +93,20 @@ namespace AGIS_work
         }
 
         private void AgisControl_Paint(object sender, PaintEventArgs e)
-        {
+        {/*
             try
             {
                 Graphics g = e.Graphics;
                 foreach (DataPoint point in PointSet.PointList)
                 {                   
-                    g.FillEllipse(PointBrush, (float)((point.X - this.OffsetX) * this.Zoom - PointRadius),
-                        this.Height - (float)((point.Y - this.OffsetY) * this.Zoom - PointRadius),
-                        PointRadius * 2, PointRadius * 2);
-                    /*MessageBox.Show(string.Format("[0} {1}", (float)((point.X - this.MBR.MinX) * this.Scale),
-                        this.Height - (float)((point.Y - this.MBR.MinY) * this.Scale)));*/
+                    g.FillRectangle(PointBrush, (float)((point.X - this.OffsetX) * this.Zoom - PointRadius),
+                        (float)(this.Height - ((point.Y - this.OffsetY) * this.Zoom - PointRadius)),
+                        (float)(PointRadius * 2), (float)(PointRadius * 2));
+                    //MessageBox.Show(string.Format("[0} {1}", (float)((point.X - this.MBR.MinX) * this.Scale),
+                    //    this.Height - (float)((point.Y - this.MBR.MinY) * this.Scale)));
                 }
             }
-            catch (Exception err) { }
+            catch { }*/
         }
 
         public void SetUserOperationToDisplayInGrid()
@@ -123,7 +123,7 @@ namespace AGIS_work
         public PointF GetScreenLocation(double x,double y)
         {
             return new PointF((float)((x - this.OffsetX) * this.Zoom),
-                this.Height - (float)((y - this.OffsetY) * this.Zoom));
+                (float)(this.Height - ((y - this.OffsetY) * this.Zoom)));
         }
 
         /// <summary>
@@ -142,8 +142,22 @@ namespace AGIS_work
         /// <returns></returns>
         public double GetScreenLocY(double y)
         {
-            return this.Height - (float)((y - this.OffsetY) * this.Zoom);
+            return (this.Height - ((y - this.OffsetY) * this.Zoom));
         }
+
+        /// <summary>
+        /// 获取实际边在屏幕上的投影
+        /// </summary>
+        /// <param name="edge"></param>
+        /// <returns></returns>
+        public PointF[] GetScreenEdge(Edge edge)
+        {
+            PointF startP = new PointF((float)GetScreenLocX(edge.StartPoint.X), (float)GetScreenLocY(edge.StartPoint.Y));
+            PointF endP = new PointF((float)GetScreenLocX(edge.EndPoint.X), (float)GetScreenLocY(edge.EndPoint.Y));
+            return new PointF[] { startP,endP };
+        }
+
+
 
         /// <summary>
         /// 获取屏幕点的实际位置。
@@ -190,9 +204,9 @@ namespace AGIS_work
             {
                 OffsetX = MBR_Origin.MinX;
                 OffsetY = MBR_Origin.MinY;
-                this.Scale = Math.Min(this.Height / (this.PointSet.MBR.MaxY - this.PointSet.MBR.MinY),
+                this.ZoomScale = Math.Min(this.Height / (this.PointSet.MBR.MaxY - this.PointSet.MBR.MinY),
                     this.Width / (this.PointSet.MBR.MaxX - this.PointSet.MBR.MinX)) / this.FrameScaling;
-                this.Zoom = this.Scale;
+                this.Zoom = this.ZoomScale;
             }
             this.Refresh();
         }

@@ -91,11 +91,20 @@
     </Compile>
     <Compile Include="DataStructure\DataPoint.cs" />
     <Compile Include="DataStructure\Edge.cs" />
+    <Compile Include="DataStructure\EdgeSet.cs" />
     <Compile Include="DataStructure\MBR.cs" />
     <Compile Include="DataStructure\PointSet.cs" />
     <Compile Include="DataStructure\TIN.cs" />
+    <Compile Include="DataStructure\TinLine.cs" />
     <Compile Include="DataStructure\Triangle.cs" />
+    <Compile Include="DataStructure\TriangleSet.cs" />
     <Compile Include="DataStructure\Vector2D.cs" />
+    <Compile Include="Forms\ContourLine\ContourLineSettingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ContourLine\ContourLineSettingForm.Designer.cs">
+      <DependentUpon>ContourLineSettingForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\File\OpenFileForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -127,11 +136,15 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Mehtod\CreateTIN.cs" />
+    <Compile Include="Mehtod\GridCreateContourLine.cs" />
     <Compile Include="Mehtod\GridInterpolation.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AgisControl.resx">
       <DependentUpon>AgisControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ContourLine\ContourLineSettingForm.resx">
+      <DependentUpon>ContourLineSettingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\File\OpenFileForm.resx">
       <DependentUpon>OpenFileForm.cs</DependentUpon>

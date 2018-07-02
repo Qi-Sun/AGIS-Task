@@ -87,7 +87,7 @@
             this.帮助ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(762, 25);
+            this.menuStrip1.Size = new System.Drawing.Size(995, 25);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -104,6 +104,7 @@
             // 
             // 新建toolStripMenuItem
             // 
+            this.新建toolStripMenuItem.Enabled = false;
             this.新建toolStripMenuItem.Name = "新建toolStripMenuItem";
             this.新建toolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.新建toolStripMenuItem.Text = "新建";
@@ -117,12 +118,14 @@
             // 
             // 保存ToolStripMenuItem
             // 
+            this.保存ToolStripMenuItem.Enabled = false;
             this.保存ToolStripMenuItem.Name = "保存ToolStripMenuItem";
             this.保存ToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.保存ToolStripMenuItem.Text = "保存";
             // 
             // 另存为ToolStripMenuItem
             // 
+            this.另存为ToolStripMenuItem.Enabled = false;
             this.另存为ToolStripMenuItem.Name = "另存为ToolStripMenuItem";
             this.另存为ToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.另存为ToolStripMenuItem.Text = "另存为";
@@ -239,6 +242,7 @@
             // 
             // 逐点插入法ToolStripMenuItem
             // 
+            this.逐点插入法ToolStripMenuItem.CheckOnClick = true;
             this.逐点插入法ToolStripMenuItem.Name = "逐点插入法ToolStripMenuItem";
             this.逐点插入法ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.逐点插入法ToolStripMenuItem.Text = "逐点插入法";
@@ -251,9 +255,11 @@
             // 
             // 生成等值线ToolStripMenuItem1
             // 
+            this.生成等值线ToolStripMenuItem1.CheckOnClick = true;
             this.生成等值线ToolStripMenuItem1.Name = "生成等值线ToolStripMenuItem1";
             this.生成等值线ToolStripMenuItem1.Size = new System.Drawing.Size(136, 22);
             this.生成等值线ToolStripMenuItem1.Text = "生成等值线";
+            this.生成等值线ToolStripMenuItem1.CheckedChanged += new System.EventHandler(this.生成等值线ToolStripMenuItem1_CheckedChanged);
             this.生成等值线ToolStripMenuItem1.Click += new System.EventHandler(this.生成等值线ToolStripMenuItem1_Click);
             // 
             // toolStripSeparator5
@@ -273,15 +279,17 @@
             // 
             // 显示隐藏TINToolStripMenuItem
             // 
+            this.显示隐藏TINToolStripMenuItem.CheckOnClick = true;
             this.显示隐藏TINToolStripMenuItem.Name = "显示隐藏TINToolStripMenuItem";
             this.显示隐藏TINToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.显示隐藏TINToolStripMenuItem.Text = "显示/隐藏TIN";
+            this.显示隐藏TINToolStripMenuItem.Click += new System.EventHandler(this.显示隐藏TINToolStripMenuItem_Click);
             // 
             // 清楚TINToolStripMenuItem
             // 
             this.清楚TINToolStripMenuItem.Name = "清楚TINToolStripMenuItem";
             this.清楚TINToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
-            this.清楚TINToolStripMenuItem.Text = "清楚TIN";
+            this.清楚TINToolStripMenuItem.Text = "清除TIN";
             // 
             // 拓扑关系ToolStripMenuItem
             // 
@@ -355,9 +363,9 @@
             this.StatusLabelScreenX,
             this.toolStripStatusLabelScreenY,
             this.StatusLabelScreenY});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 490);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 712);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(762, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(995, 22);
             this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -417,7 +425,7 @@
             this.agisControl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.agisControl.Location = new System.Drawing.Point(0, 25);
             this.agisControl.Name = "agisControl";
-            this.agisControl.Size = new System.Drawing.Size(762, 462);
+            this.agisControl.Size = new System.Drawing.Size(995, 684);
             this.agisControl.TabIndex = 1;
             this.agisControl.Load += new System.EventHandler(this.agisControl_Load);
             this.agisControl.Paint += new System.Windows.Forms.PaintEventHandler(this.agisControl_Paint);
@@ -431,7 +439,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(762, 512);
+            this.ClientSize = new System.Drawing.Size(995, 734);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.agisControl);
             this.Controls.Add(this.menuStrip1);

@@ -40,7 +40,7 @@
             this.txtBxFilename.Location = new System.Drawing.Point(71, 23);
             this.txtBxFilename.Name = "txtBxFilename";
             this.txtBxFilename.Size = new System.Drawing.Size(346, 21);
-            this.txtBxFilename.TabIndex = 0;
+            this.txtBxFilename.TabIndex = 3;
             this.txtBxFilename.Text = "../../Data/TestData.csv";
             // 
             // label1
@@ -67,7 +67,7 @@
             this.bttnOK.Location = new System.Drawing.Point(342, 58);
             this.bttnOK.Name = "bttnOK";
             this.bttnOK.Size = new System.Drawing.Size(75, 23);
-            this.bttnOK.TabIndex = 3;
+            this.bttnOK.TabIndex = 0;
             this.bttnOK.Text = "OK";
             this.bttnOK.UseVisualStyleBackColor = true;
             this.bttnOK.Click += new System.EventHandler(this.bttnOK_Click);
