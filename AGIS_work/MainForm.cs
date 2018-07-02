@@ -29,6 +29,10 @@ namespace AGIS_work
 
         public UserOperationType UserOperation;
 
+        // -- 数据点
+        private float PointHalfWidth = 5;
+        public Brush PointIconBrush = new SolidBrush(Color.Red);
+
         // ----格网相关
         public bool IsGridVisible = false;
         public int GridDivisionCount_X = 0;
@@ -37,14 +41,13 @@ namespace AGIS_work
         public int EachGridDivisionCount_Y = 1;
         public float GridLineWidth = 2.0f;
         public float GridSubLineWidth = 1.0f;
-        public Pen GridLinePen = new Pen(Color.Black, 1.6f);
+        public Pen GridLinePen = new Pen(Color.Black, 2.0f);
         public Pen GridSubLinePen = new Pen(Color.Black, 1.0f);
         public bool IsQueryIntersection = false;
         public List<double> Grid_AxisX = new List<double>();
         public List<double> Grid_AxisY = new List<double>();
         public List<double> GridScreen_AxisX = new List<double>();
         public List<double> GridScreen_AxisY = new List<double>();
-        public Brush PointIconBrush = new SolidBrush(Color.Red);
 
         // -- 格网选中交点
         public int SelectPixelThreshold = 9;
@@ -55,6 +58,7 @@ namespace AGIS_work
 
         // -- 格网等高线
         public Edge[] GridContourList = null;
+        public ContourPolyline[] GridContourPolylineList = null;
         public Pen GridContourLinePen = new Pen(Color.Brown, 1.5f);
         public double[,] GridValueMatrix = null;
         public double[,] SS = null;
@@ -162,6 +166,17 @@ namespace AGIS_work
                         g.DrawLine(GridContourLinePen, screenLine[0], screenLine[1]);
                     }
                 }
+                if (ShowContourLine == true && GridContourPolylineList != null)
+                {
+                    for (int i = 0; i < GridContourPolylineList.Length; i++)
+                    {
+                        PointF[] screenLine = agisControl.GetScreenEdge(GridContourPolylineList[i]);
+                        Graphics g = e.Graphics;
+                        float tension = 0.2f /* (float)(agisControl.ZoomScale / agisControl.Zoom)*/;
+                        if (screenLine.Length > 1)
+                            g.DrawCurve(GridContourLinePen, screenLine, tension);
+                    }
+                }
             }
             if (this.UserOperation == UserOperationType.DisplayInTIN)
             {
@@ -193,11 +208,19 @@ namespace AGIS_work
                 foreach (var point in mPointSet.PointList)
                 {
                     Graphics g = e.Graphics;
-                    g.FillRectangle(PointIconBrush, (float)agisControl.GetScreenLocX(point.X) - 3,
-                        (float)agisControl.GetScreenLocY(point.Y) - 3, 6, 6);
+                    g.FillEllipse(PointIconBrush, (float)agisControl.GetScreenLocX(point.X) - this.PointHalfWidth,
+                        (float)agisControl.GetScreenLocY(point.Y) - PointHalfWidth, PointHalfWidth * 2, PointHalfWidth * 2);
                 }
             }
 
+        }
+
+        private float GetLineLength(PointF[] line)
+        {
+            float length = 0;
+            for (int i = 0; i < line.Length - 1; i++)
+                length += (float)Math.Sqrt(Math.Pow(line[0].X - line[1].X, 2) + Math.Pow(line[0].Y - line[1].Y, 2));
+            return length;
         }
 
         private void agisControl_MouseMove(object sender, MouseEventArgs e)
@@ -379,6 +402,8 @@ namespace AGIS_work
                 {
                     //生成格网矩阵
                     List<Edge> tempGridContourLineList = new List<Edge>();
+                    List<ContourPolyline> tempContourPolylineList = new List<ContourPolyline>();
+                    ContourPolylineSet tempContourPolyline = new ContourPolylineSet();
                     //计算等值线条数
                     int lineCount = (int)((settingForm.MaxValue - settingForm.MinValue) / settingForm.IntervalValue);
                     for (int k = 0; k < lineCount; k++)
@@ -389,9 +414,10 @@ namespace AGIS_work
                         double[,] tempSS = 内插等值点_SS(tempElevation);
                         int Grid_Count_all_X = this.EachGridDivisionCount_X * this.GridDivisionCount_X;
                         int Grid_Count_all_Y = this.EachGridDivisionCount_Y * this.GridDivisionCount_Y;
-                        for (int i = 0; i < Grid_Count_all_X  ; i++)
+
+                        for (int i = 0; i < Grid_Count_all_X; i++)
                         {
-                            for (int j = 0; j < Grid_Count_all_Y ; j++)
+                            for (int j = 0; j < Grid_Count_all_Y; j++)
                             {
                                 List<DataPoint> tempPointList = new List<DataPoint>();
                                 //横边有等值点
@@ -399,7 +425,7 @@ namespace AGIS_work
                                 {
                                     tempPointList.Add(new DataPoint(-i * 100 - j, "等值点" + (-i * 100 - j).ToString(),
                                         Grid_AxisX[i] + tempHH[i, j] * (Grid_AxisX[i + 1] - Grid_AxisX[i]),
-                                        Grid_AxisY[j], tempElevation, -i * 100 - j));
+                                        Grid_AxisY[j], tempElevation/*, -i * 100 - j*/));
                                 }
                                 //竖边有等值点
                                 if (tempSS[i, j] < 2)
@@ -407,14 +433,14 @@ namespace AGIS_work
                                     tempPointList.Add(new DataPoint(i * 100 + j, "等值点" + (i * 100 + j).ToString(),
                                         Grid_AxisX[i],
                                         Grid_AxisY[j] + tempSS[i, j] * (Grid_AxisY[j + 1] - Grid_AxisY[j]),
-                                        tempElevation, i * 100 + j));
+                                        tempElevation/*, i * 100 + j*/));
                                 }
                                 //另一条横边有等值点
                                 if (tempHH[i, j + 1] < 2)
                                 {
                                     tempPointList.Add(new DataPoint(-i * 100 - j - 1, "等值点" + (-i * 100 - j - 1).ToString(),
                                         Grid_AxisX[i] + tempHH[i, j + 1] * (Grid_AxisX[i + 1] - Grid_AxisX[i]),
-                                        Grid_AxisY[j + 1], tempElevation, -i * 100 - j - 1));
+                                        Grid_AxisY[j + 1], tempElevation/*, -i * 100 - j - 1*/));
                                 }
                                 //另一条竖边有等值点
                                 if (tempSS[i + 1, j] < 2)
@@ -422,33 +448,33 @@ namespace AGIS_work
                                     tempPointList.Add(new DataPoint((i + 1) * 100 + j, "等值点" + ((1 + i) * 100 + j).ToString(),
                                         Grid_AxisX[i + 1],
                                         Grid_AxisY[j] + tempSS[i + 1, j] * (Grid_AxisY[j + 1] - Grid_AxisY[j]),
-                                        tempElevation, (i + 1) * 100 + j));
+                                        tempElevation/*, (i + 1) * 100 + j*/));
                                 }
                                 if (tempPointList.Count < 2)//无等值线
                                     continue;
                                 else if (tempPointList.Count < 4)
                                 {
-                                    tempGridContourLineList.Add(new Edge(tempPointList[0], tempPointList[1],
-                                        (tempPointList[0].GetHashCode() * tempPointList[1].GetHashCode()).GetHashCode()));
+                                    tempGridContourLineList.Add(new Edge(tempPointList[0], tempPointList[1]));
                                 }
                                 else
                                 {
-                                    tempGridContourLineList.Add(new Edge(tempPointList[0], tempPointList[1],
-                                        (tempPointList[0].GetHashCode() * tempPointList[1].GetHashCode()).GetHashCode()));
-                                    tempGridContourLineList.Add(new Edge(tempPointList[2], tempPointList[3],
-                                        (tempPointList[2].GetHashCode() * tempPointList[3].GetHashCode()).GetHashCode()));
+                                    tempGridContourLineList.Add(new Edge(tempPointList[0], tempPointList[1]));
+                                    tempGridContourLineList.Add(new Edge(tempPointList[2], tempPointList[3]));
                                 }
                             }
                         }
-                        
-                        for (int i = 0; i < Grid_Count_all_X - 1; i++)
-                        {
-                            int j = Grid_Count_all_Y - 1;
-                        }
+                        tempContourPolyline = EdgeSet.TopologyGenerateContourPolylineSet(tempGridContourLineList.ToArray());
+
+                        /*另一种方法 
+                        GridCreateContourLine CreateContourLineClass = new GridCreateContourLine(this.Grid_AxisX, this.Grid_AxisY,
+                            tempHH, tempSS, Grid_Count_all_X, Grid_Count_all_Y, tempElevation);
+                        tempContourPolylineList = CreateContourLineClass.CreateContourLines();
+                        */
                     }
-                    this.GridContourList = tempGridContourLineList.ToArray();
+                    //this.GridContourList = tempGridContourLineList.ToArray();
+                    this.GridContourPolylineList = tempContourPolyline.ContourPolylineList.ToArray();
                 }
-                GridContourLinePen.DashStyle = System.Drawing.Drawing2D.DashStyle.DashDot;
+                //GridContourLinePen.DashStyle = System.Drawing.Drawing2D.DashStyle.DashDot;
                 agisControl.Refresh();
             }
         }
@@ -481,7 +507,7 @@ namespace AGIS_work
             int Grid_Count_all_X = this.EachGridDivisionCount_X * this.GridDivisionCount_X;
             int Grid_Count_all_Y = this.EachGridDivisionCount_Y * this.GridDivisionCount_Y;
             double[,] tempHH = new double[Grid_Count_all_X, Grid_Count_all_Y + 1];
-            for (int i = 0; i < Grid_Count_all_X ; i++)
+            for (int i = 0; i < Grid_Count_all_X; i++)
             {
                 for (int j = 0; j <= Grid_Count_all_Y; j++)
                 {
@@ -500,7 +526,7 @@ namespace AGIS_work
             double[,] tempSS = new double[Grid_Count_all_X + 1, Grid_Count_all_Y];
             for (int i = 0; i <= Grid_Count_all_X; i++)
             {
-                for (int j = 0; j < Grid_Count_all_Y ; j++)
+                for (int j = 0; j < Grid_Count_all_Y; j++)
                 {
                     double r = (elev - GridValueMatrix[i, j]) / (GridValueMatrix[i, j + 1] - GridValueMatrix[i, j]);
                     tempSS[i, j] = (r <= 1 && r >= 0) ? r : 3;

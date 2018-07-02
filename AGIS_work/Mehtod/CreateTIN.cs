@@ -34,14 +34,14 @@ namespace AGIS_work.Mehtod
             double height = sMBR.MaxY - sMBR.MinY;
             double middlePointX = (sMBR.MaxX + sMBR.MinX) / 2;
             double middlePointY = sMBR.MinY;
-            DataPoint P0 = new DataPoint(-1, "P0", middlePointX - width, middlePointY, 0, -1);
-            DataPoint P1 = new DataPoint(-2, "P1", middlePointX + width, middlePointY, 0, -2);
-            DataPoint P2 = new DataPoint(-3, "P2", middlePointX, middlePointY + 2 * height, 0, -3);
+            DataPoint P0 = new DataPoint(-1, "P0", middlePointX - width, middlePointY, 0);
+            DataPoint P1 = new DataPoint(-2, "P1", middlePointX + width, middlePointY, 0);
+            DataPoint P2 = new DataPoint(-3, "P2", middlePointX, middlePointY + 2 * height, 0);
             Triangle T0 = new Triangle(P0, P1, P2, -1);
             sTriangleSet.AddTriangle(T0);
-            sEdgeSet.AddEdge(new Edge(P0, P1, -1));
-            sEdgeSet.AddEdge(new Edge(P1, P2, -2));
-            sEdgeSet.AddEdge(new Edge(P1, P0, -3));
+            sEdgeSet.AddEdge(new Edge(P0, P1));
+            sEdgeSet.AddEdge(new Edge(P1, P2));
+            sEdgeSet.AddEdge(new Edge(P1, P0));
             foreach (var point in mPointSet.PointList)
             {
                 Triangle CurTri = sTriangleSet.GetPointInsidesTri(point);
@@ -160,7 +160,7 @@ namespace AGIS_work.Mehtod
             int eid = 1;
             foreach (var tinLine in tinlines)
             {
-                ResultEdge.Add(new Edge(((TinLine)tinLine).Begin, ((TinLine)tinLine).End, eid));
+                ResultEdge.Add(new Edge(((TinLine)tinLine).Begin, ((TinLine)tinLine).End));
                 eid++;
             }
             return ResultEdge.ToArray();
@@ -497,9 +497,8 @@ namespace AGIS_work.Mehtod
                 pt1 = arrDots[eg.Start];
                 pt2 = arrDots[eg.End];
                 EdgeList.Add(new Edge(
-                    new DataPoint(gg, gg.ToString(), pt1.X, pt1.Y, 0, gg),
-                    new DataPoint(-gg, (-gg).ToString(), pt2.X, pt2.Y, 0, -gg),
-                    gg));
+                    new DataPoint(gg, gg.ToString(), pt1.X, pt1.Y, 0),
+                    new DataPoint(-gg, (-gg).ToString(), pt2.X, pt2.Y, 0)));
             }
             return EdgeList;
         }

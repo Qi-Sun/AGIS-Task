@@ -15,7 +15,7 @@ namespace AGIS_work.DataStructure
         public List<DataPoint> PointList { get; private set; }
         public MinBoundRect MBR { get; private set; }
 
-        public PointSet() { MBR = new MinBoundRect(-1, -1, 1, 1); }
+        public PointSet() { MBR = new MinBoundRect(-1, -1, 1, 1); PointList = new List<DataPoint>(); }
         public PointSet(string setname,string filename, DataPoint[] points)
         {
             this.SetName = setname;
@@ -46,7 +46,7 @@ namespace AGIS_work.DataStructure
                     string onePoint = sr.ReadLine();
                     string[] pointInfo = onePoint.Split(',');
                     dataPoints.Add(new DataPoint(int.Parse(pointInfo[0]), pointInfo[1], double.Parse(pointInfo[2]),
-                         double.Parse(pointInfo[3]), double.Parse(pointInfo[4]), oid));
+                         double.Parse(pointInfo[3]), double.Parse(pointInfo[4])));
                     oid++;
                 }
                 pointSet = new PointSet(setName, filename, dataPoints.ToArray());
@@ -97,6 +97,21 @@ namespace AGIS_work.DataStructure
                     return point;
             }
             return null;
+        }
+
+        /// <summary>
+        /// 添加数据点（OID不重复）
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns>是否添加成功</returns>
+        public bool AddPoint(DataPoint point)
+        {
+            if (GetPointByOID(point.OID) == null)
+            {
+                PointList.Add(point);
+                return true;
+            }
+            else return false;
         }
 
         /// <summary>

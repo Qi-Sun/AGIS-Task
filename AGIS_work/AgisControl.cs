@@ -157,6 +157,21 @@ namespace AGIS_work
             return new PointF[] { startP,endP };
         }
 
+        /// <summary>
+        /// 获取实际折线在屏幕上的投影
+        /// </summary>
+        /// <param name="polyline"></param>
+        /// <returns></returns>
+        public PointF[] GetScreenEdge(ContourPolyline polyline)
+        {
+            List<PointF> tempPointList = new List<PointF>();
+            foreach (var point in polyline.PointList)
+            {
+                tempPointList.Add(new PointF((float)GetScreenLocX(point.X), (float)GetScreenLocY(point.Y)));
+            }
+            return tempPointList.ToArray();
+        }
+
 
 
         /// <summary>

@@ -60,7 +60,7 @@ namespace AGIS_work.DataStructure
                 double EleY = VertexA.Y + (VertexB.Y - VertexA.Y) * (elevation - VertexA.Value) / (VertexB.Value - VertexA.Value);
                 DataPoint p1 = new DataPoint(VertexA.OID * 1000 + VertexB.OID,
                     "ContourPoint_" + VertexA.OID * 1000 + VertexB.OID,
-                    EleX, EleY, elevation, VertexA.OID * 1000 + VertexB.OID);
+                    EleX, EleY, elevation);
                 points.Add(p1);
             }
             if ((elevation - VertexA.Value) * (elevation - VertexC.Value) < 0)
@@ -69,7 +69,7 @@ namespace AGIS_work.DataStructure
                 double EleY = VertexA.Y + (VertexC.Y - VertexA.Y) * (elevation - VertexA.Value) / (VertexC.Value - VertexA.Value);
                 DataPoint p1 = new DataPoint(VertexA.OID * 1000 + VertexC.OID,
                     "ContourPoint_" + VertexA.OID * 1000 + VertexC.OID,
-                    EleX, EleY, elevation, VertexA.OID * 1000 + VertexC.OID);
+                    EleX, EleY, elevation);
                 points.Add(p1);
             }
             if ((elevation - VertexC.Value) * (elevation - VertexB.Value) < 0)
@@ -78,12 +78,12 @@ namespace AGIS_work.DataStructure
                 double EleY = VertexC.Y + (VertexB.Y - VertexC.Y) * (elevation - VertexC.Value) / (VertexB.Value - VertexC.Value);
                 DataPoint p1 = new DataPoint(VertexC.OID * 1000 + VertexB.OID,
                     "ContourPoint_" + VertexC.OID * 1000 + VertexB.OID,
-                    EleX, EleY, elevation, VertexC.OID * 1000 + VertexB.OID);
+                    EleX, EleY, elevation);
                 points.Add(p1);
             }
             if (points.Count == 2)
             {
-                return new Edge(points[0], points[1], (points[0].GetHashCode() * points[1].GetHashCode()).GetHashCode());
+                return new Edge(points[0], points[1]);
             }
             else return null;
         }

@@ -89,6 +89,8 @@
     <Compile Include="AgisControl.Designer.cs">
       <DependentUpon>AgisControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataStructure\ContourPolyline.cs" />
+    <Compile Include="DataStructure\ContourPolylineSet.cs" />
     <Compile Include="DataStructure\DataPoint.cs" />
     <Compile Include="DataStructure\Edge.cs" />
     <Compile Include="DataStructure\EdgeSet.cs" />
@@ -96,6 +98,9 @@
     <Compile Include="DataStructure\PointSet.cs" />
     <Compile Include="DataStructure\TIN.cs" />
     <Compile Include="DataStructure\TinLine.cs" />
+    <Compile Include="DataStructure\TopoPoint.cs" />
+    <Compile Include="DataStructure\TopoPolygon.cs" />
+    <Compile Include="DataStructure\TopoPolyline.cs" />
     <Compile Include="DataStructure\Triangle.cs" />
     <Compile Include="DataStructure\TriangleSet.cs" />
     <Compile Include="DataStructure\Vector2D.cs" />

@@ -15,7 +15,8 @@ namespace AGIS_work.DataStructure
         public double Value { get; private set; }
         public MinBoundRect MBR { get; private set; }
         public int OID { get; private set; }
-
+        private static int _oid = 70000;
+        /*
         public DataPoint(int id, string name, double x, double y, double value,int oid)
         {
             this.ID = id;
@@ -25,6 +26,17 @@ namespace AGIS_work.DataStructure
             this.Value = value;
             this.MBR = new MinBoundRect(x, y, x, y);
             this.OID = oid;
+        }*/
+
+        public DataPoint(int id, string name, double x, double y, double value)
+        {
+            this.ID = id;
+            this.Name = name;
+            this.X = x;
+            this.Y = y;
+            this.Value = value;
+            this.MBR = new MinBoundRect(x, y, x, y);
+            this.OID = _oid++;
         }
 
         public override string ToString()
@@ -123,6 +135,7 @@ namespace AGIS_work.DataStructure
             }
             return youbian;
         }
+
 
     }
 }
