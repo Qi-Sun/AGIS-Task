@@ -12,6 +12,7 @@ using AGIS_work.DataStructure;
 using AGIS_work.Forms.Grid;
 using AGIS_work.Mehtod;
 using AGIS_work.Forms.ContourLine;
+using System.Threading;
 
 namespace AGIS_work
 {
@@ -75,6 +76,20 @@ namespace AGIS_work
         public Edge[] TinContourLineList = null;
         public Pen TinContourLinePen = new Pen(Color.Gray, 1.0f);
 
+        // -- 拓扑关系相关
+        private List<ContourPolyline> mSubPolyline;
+        private List<Edge> mSubEdge;
+        public bool ShowTopology = false;
+        public Brush TopologyNodeBrush = new SolidBrush(Color.Blue);
+        public Brush TopologyPointBrush = new SolidBrush(Color.Green);
+        public int TopologyPixelHalfWidth = 3;
+        private Pen TopolopyLinePen = new Pen(Color.Green, 1.5f);
+
+        // -- 拓扑表
+        private TopoPolygonSet mTopoPolygonSet;
+        private TopoPolylineSet mTopoPolylineSet;
+        private TopoPointSet mTopoPointSet;
+
         private void MainForm_Load(object sender, EventArgs e)
         {
             GridLinePen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
@@ -112,6 +127,61 @@ namespace AGIS_work
 
             //画一些基础的图形
             if (this.UserOperation != UserOperationType.None) { }
+            //绘制拓扑数据
+            if (this.ShowTopology == true)
+            {
+
+                //foreach (var subEdge in this.mSubEdge)
+                //{
+                //    DataPoint point = subEdge.StartPoint;
+                //    Graphics g = e.Graphics;
+                //    PointF pf = agisControl.GetScreenLocation(point.X, point.Y);
+                //    g.FillRectangle(TopologyBrush, (float)agisControl.GetScreenLocX(point.X) - this.TopologyPixelHalfWidth,
+                //        (float)agisControl.GetScreenLocY(point.Y) - TopologyPixelHalfWidth,
+                //        TopologyPixelHalfWidth * 2, TopologyPixelHalfWidth * 2);
+                //}
+                //foreach (var subEdge in this.mSubEdge)
+                //{
+                //    DataPoint point = subEdge.StartPoint;
+                //    Graphics g = e.Graphics;
+                //    PointF[] pf = agisControl.GetScreenEdge(subEdge);
+                //    g.DrawLines(this.TopolopyLinePen, pf);
+                //}
+                // -- 绘制多边形
+                foreach (var item in this.mTopoPolygonSet.TopoPolygonList)
+                {
+                    TopoPoint[] tempLines = item.ConvertToPointArray();
+                    Graphics g = e.Graphics;
+                    PointF[] pf = agisControl.GetScreenPoints(tempLines);
+                    Brush randomBrush = new SolidBrush(this.GetRandomColor());
+                    g.FillPolygon(randomBrush, pf);
+                    //Thread.Sleep(1000);
+                }
+                // -- 绘制折线
+                foreach (var line in this.mTopoPolylineSet.TopoPolylineList)
+                {
+                    Graphics g = e.Graphics;
+                    PointF[] pf = agisControl.GetScreenLine(line);
+                    g.DrawLines(this.TopolopyLinePen, pf);
+                }
+                // -- 绘制中间点
+                foreach (var point in this.mTopoPointSet.TopoPointList)
+                {
+                    Graphics g = e.Graphics;
+                    PointF pf = agisControl.GetScreenPoint(point);
+                    g.FillRectangle(TopologyPointBrush, pf.X - this.TopologyPixelHalfWidth, pf.Y - TopologyPixelHalfWidth,
+                        TopologyPixelHalfWidth * 2, TopologyPixelHalfWidth * 2);
+                }
+                // -- 绘制结点
+                foreach (var point in this.mTopoPointSet.TopoNodeList)
+                {
+                    Graphics g = e.Graphics;
+                    PointF pf = agisControl.GetScreenPoint(point);
+                    g.FillRectangle(TopologyNodeBrush, pf.X - this.TopologyPixelHalfWidth, pf.Y - TopologyPixelHalfWidth,
+                        TopologyPixelHalfWidth * 2, TopologyPixelHalfWidth * 2);
+                }
+
+            }
             //在网格中
             if (this.UserOperation == UserOperationType.DisplayInGrid)
             {
@@ -212,6 +282,7 @@ namespace AGIS_work
                         (float)agisControl.GetScreenLocY(point.Y) - PointHalfWidth, PointHalfWidth * 2, PointHalfWidth * 2);
                 }
             }
+            
 
         }
 
@@ -221,6 +292,19 @@ namespace AGIS_work
             for (int i = 0; i < line.Length - 1; i++)
                 length += (float)Math.Sqrt(Math.Pow(line[0].X - line[1].X, 2) + Math.Pow(line[0].Y - line[1].Y, 2));
             return length;
+        }
+
+        public Color GetRandomColor()
+        {
+            Random RandomNum_First = new Random((int)DateTime.Now.Ticks);
+            System.Threading.Thread.Sleep(RandomNum_First.Next(50));
+            Random RandomNum_Sencond = new Random((int)DateTime.Now.Ticks);
+            //  为了在白色背景上显示，尽量生成深色
+            int int_Red = RandomNum_First.Next(256);
+            int int_Green = RandomNum_Sencond.Next(256);
+            int int_Blue = (int_Red + int_Green > 400) ? 0 : 400 - int_Red - int_Green;
+            int_Blue = (int_Blue > 255) ? 255 : int_Blue;
+            return Color.FromArgb(int_Red, int_Green, int_Blue);
         }
 
         private void agisControl_MouseMove(object sender, MouseEventArgs e)
@@ -423,32 +507,32 @@ namespace AGIS_work
                                 //横边有等值点
                                 if (tempHH[i, j] < 2)
                                 {
-                                    tempPointList.Add(new DataPoint(-i * 100 - j, "等值点" + (-i * 100 - j).ToString(),
+                                    tempPointList.Add(new DataPoint(-i * 1000 - j, "等值点" + (-i * 1000 - j).ToString(),
                                         Grid_AxisX[i] + tempHH[i, j] * (Grid_AxisX[i + 1] - Grid_AxisX[i]),
-                                        Grid_AxisY[j], tempElevation/*, -i * 100 - j*/));
+                                        Grid_AxisY[j], tempElevation, (-i * 1000 - j)*1000 + (int)tempElevation));
                                 }
                                 //竖边有等值点
                                 if (tempSS[i, j] < 2)
                                 {
-                                    tempPointList.Add(new DataPoint(i * 100 + j, "等值点" + (i * 100 + j).ToString(),
+                                    tempPointList.Add(new DataPoint(i * 1000 + j, "等值点" + (i * 1000 + j).ToString(),
                                         Grid_AxisX[i],
                                         Grid_AxisY[j] + tempSS[i, j] * (Grid_AxisY[j + 1] - Grid_AxisY[j]),
-                                        tempElevation/*, i * 100 + j*/));
+                                        tempElevation, (i * 1000 + j) * 1000 + (int)tempElevation));
                                 }
                                 //另一条横边有等值点
                                 if (tempHH[i, j + 1] < 2)
                                 {
-                                    tempPointList.Add(new DataPoint(-i * 100 - j - 1, "等值点" + (-i * 100 - j - 1).ToString(),
+                                    tempPointList.Add(new DataPoint(-i * 1000 - j - 1, "等值点" + (-i * 1000 - j - 1).ToString(),
                                         Grid_AxisX[i] + tempHH[i, j + 1] * (Grid_AxisX[i + 1] - Grid_AxisX[i]),
-                                        Grid_AxisY[j + 1], tempElevation/*, -i * 100 - j - 1*/));
+                                        Grid_AxisY[j + 1], tempElevation, (-i * 1000 - j - 1) * 1000 + (int)tempElevation));
                                 }
                                 //另一条竖边有等值点
                                 if (tempSS[i + 1, j] < 2)
                                 {
-                                    tempPointList.Add(new DataPoint((i + 1) * 100 + j, "等值点" + ((1 + i) * 100 + j).ToString(),
+                                    tempPointList.Add(new DataPoint((i + 1) * 1000 + j, "等值点" + ((1 + i) * 1000 + j).ToString(),
                                         Grid_AxisX[i + 1],
                                         Grid_AxisY[j] + tempSS[i + 1, j] * (Grid_AxisY[j + 1] - Grid_AxisY[j]),
-                                        tempElevation/*, (i + 1) * 100 + j*/));
+                                        tempElevation, ((i + 1) * 1000 + j) * 1000 + (int)tempElevation));
                                 }
                                 if (tempPointList.Count < 2)//无等值线
                                     continue;
@@ -607,12 +691,18 @@ namespace AGIS_work
 
         private void 生成拓扑关系ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            if (GridContourPolylineList == null) return; 
+            this.GenerateTopologyRelatation(this.GridContourPolylineList);
+            this.ConvertLineEdgeToPolyline();
+            this.mTopoPointSet = new TopoPointSet(this.mTopoPolylineSet.TopoPolylineList.ToArray());
+            this.mTopoPolygonSet = this.mTopoPointSet.GenerateTopoPolygonSet();
+            return;
         }
 
         private void 可视化ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            this.ShowTopology = (可视化ToolStripMenuItem.Checked == true);
+            this.agisControl.Refresh();
         }
 
         private void 查询ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -749,6 +839,77 @@ namespace AGIS_work
             生成等值线ToolStripMenuItem1.Checked = isVisable;
             生成等值线ToolStripMenuItem.Checked = isVisable;
             agisControl.Refresh();
+        }
+
+        public void GenerateTopologyRelatation(ContourPolyline[] contourLines)
+        {
+            double BottomY = agisControl.MBR_Origin.MinY;
+            double TopY = agisControl.MBR_Origin.MaxY;
+            double LeftX = agisControl.MBR_Origin.MinX;
+            double RightX = agisControl.MBR_Origin.MaxX;
+            double CenterX = (LeftX + RightX) / 2;
+            double CenterY = (BottomY + TopY) / 2;
+            DataPoint rectP0 = new DataPoint(-10000, "Rect0", CenterX, CenterY, 99999);
+            DataPoint rectP1 = new DataPoint(-10001, "Rect1", CenterX, TopY, 99999);
+            DataPoint rectP2 = new DataPoint(-10002, "Rect2", RightX, TopY, 99999);
+            DataPoint rectP3 = new DataPoint(-10003, "Rect3", RightX, CenterY, 99999);
+            DataPoint rectP4 = new DataPoint(-10004, "Rect4", RightX, BottomY, 99999);
+            DataPoint rectP5 = new DataPoint(-10005, "Rect5", CenterX, BottomY, 99999);
+            DataPoint rectP6 = new DataPoint(-10006, "Rect6", LeftX, BottomY, 99999);
+            DataPoint rectP7 = new DataPoint(-10007, "Rect7", LeftX, CenterY, 99999);
+            DataPoint rectP8 = new DataPoint(-10008, "Rect8", LeftX, TopY, 99999);
+            //给定的边
+
+            List<Edge> GivenEdges = new List<Edge>();
+            //矩形边缘
+            GivenEdges.Add(new Edge(rectP1, rectP2));
+            GivenEdges.Add(new Edge(rectP2, rectP3));
+            GivenEdges.Add(new Edge(rectP3, rectP4));
+            GivenEdges.Add(new Edge(rectP4, rectP5));
+            GivenEdges.Add(new Edge(rectP5, rectP6));
+            GivenEdges.Add(new Edge(rectP6, rectP7));
+            GivenEdges.Add(new Edge(rectP7, rectP8));
+            GivenEdges.Add(new Edge(rectP8, rectP1));
+            //矩形中心
+            GivenEdges.Add(new Edge(rectP0, rectP1));
+            GivenEdges.Add(new Edge(rectP0, rectP2));
+            GivenEdges.Add(new Edge(rectP0, rectP3));
+            GivenEdges.Add(new Edge(rectP0, rectP4));
+            GivenEdges.Add(new Edge(rectP0, rectP5));
+            GivenEdges.Add(new Edge(rectP0, rectP6));
+            GivenEdges.Add(new Edge(rectP0, rectP7));
+            GivenEdges.Add(new Edge(rectP0, rectP8));
+            //产生的结果
+            List<ContourPolyline> resultPolylineList = new List<ContourPolyline>();
+            resultPolylineList.AddRange(contourLines);
+            List<Edge> resultEdgeList = new List<Edge>();
+            //resultEdgeList.AddRange(GivenEdges.ToArray());
+            for (int i = 0; i < GivenEdges.Count; i++)
+            {
+                Object[] resIntersect = ContourPolyline.IntersectResult(resultPolylineList.ToArray(), GivenEdges[i]);
+                List<ContourPolyline> subPolyline = (List<ContourPolyline>)resIntersect[0];
+                List<Edge> subEdge = (List<Edge>)resIntersect[1];
+                resultPolylineList = subPolyline;
+                resultEdgeList.AddRange(subEdge);
+            }
+            this.mSubPolyline = resultPolylineList;
+            this.mSubEdge = resultEdgeList;
+
+
+            return;
+        }
+
+        /// <summary>
+        /// 转化边至拓扑边，生成拓扑边集合
+        /// </summary>
+        public void ConvertLineEdgeToPolyline()
+        {
+            List<TopoPolyline> topoLineList = new List<TopoPolyline>();
+            foreach (var subline in mSubPolyline)
+                topoLineList.Add(new TopoPolyline(subline));
+            foreach (var subEdge in mSubEdge)
+                topoLineList.Add(new TopoPolyline(subEdge));
+            this.mTopoPolylineSet = new TopoPolylineSet(topoLineList.ToArray());
         }
     }
 }

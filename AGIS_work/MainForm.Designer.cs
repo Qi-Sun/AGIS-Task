@@ -311,6 +311,7 @@
             // 
             // 可视化ToolStripMenuItem
             // 
+            this.可视化ToolStripMenuItem.CheckOnClick = true;
             this.可视化ToolStripMenuItem.Name = "可视化ToolStripMenuItem";
             this.可视化ToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.可视化ToolStripMenuItem.Text = "可视化";
@@ -342,13 +343,13 @@
             // 作者信息ToolStripMenuItem
             // 
             this.作者信息ToolStripMenuItem.Name = "作者信息ToolStripMenuItem";
-            this.作者信息ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.作者信息ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.作者信息ToolStripMenuItem.Text = "作者信息";
             // 
             // 程序信息ToolStripMenuItem
             // 
             this.程序信息ToolStripMenuItem.Name = "程序信息ToolStripMenuItem";
-            this.程序信息ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.程序信息ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.程序信息ToolStripMenuItem.Text = "程序信息";
             this.程序信息ToolStripMenuItem.Click += new System.EventHandler(this.程序信息ToolStripMenuItem_Click);
             // 

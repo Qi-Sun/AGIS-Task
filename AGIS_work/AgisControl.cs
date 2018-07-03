@@ -172,6 +172,35 @@ namespace AGIS_work
             return tempPointList.ToArray();
         }
 
+        public PointF GetScreenPoint(TopoPoint point)
+        {
+            return new PointF((float)((point.X - this.OffsetX) * this.Zoom),
+                (float)(this.Height - ((point.Y - this.OffsetY) * this.Zoom)));
+        }
+
+        public PointF[] GetScreenPoints(TopoPoint[] points)
+        {
+            List<PointF> result = new List<PointF>();
+            foreach (var point in points)
+            {
+                result.Add(new PointF((float)((point.X - this.OffsetX) * this.Zoom),
+                (float)(this.Height - ((point.Y - this.OffsetY) * this.Zoom))));
+            }
+            return result.ToArray();
+        }
+
+        public PointF[] GetScreenLine(TopoPolyline line)
+        {
+            List<PointF> tempPointList = new List<PointF>();
+            List<TopoPoint> pointList = new List<TopoPoint>();
+            pointList.Add(line.BeginNode);
+            pointList.AddRange(line.MiddlePoint);
+            pointList.Add(line.EndNode);
+            foreach (var point in pointList)
+                tempPointList.Add(this.GetScreenPoint(point));
+            return tempPointList.ToArray();
+        }
+
 
 
         /// <summary>

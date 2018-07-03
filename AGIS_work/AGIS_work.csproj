@@ -99,11 +99,15 @@
     <Compile Include="DataStructure\TIN.cs" />
     <Compile Include="DataStructure\TinLine.cs" />
     <Compile Include="DataStructure\TopoPoint.cs" />
+    <Compile Include="DataStructure\TopoPointSet.cs" />
     <Compile Include="DataStructure\TopoPolygon.cs" />
+    <Compile Include="DataStructure\TopoPolygonSet.cs" />
     <Compile Include="DataStructure\TopoPolyline.cs" />
+    <Compile Include="DataStructure\TopoPolylineSet.cs" />
     <Compile Include="DataStructure\Triangle.cs" />
     <Compile Include="DataStructure\TriangleSet.cs" />
     <Compile Include="DataStructure\Vector2D.cs" />
+    <Compile Include="DataStructure_Test\Edge_Test.cs" />
     <Compile Include="Forms\ContourLine\ContourLineSettingForm.cs">
       <SubType>Form</SubType>
     </Compile>
