@@ -201,7 +201,11 @@ namespace AGIS_work
             return tempPointList.ToArray();
         }
 
-
+        public double GetRegionArea()
+        {
+            return (this.MBR_Origin.MaxX - this.MBR_Origin.MinX) * 
+                (this.MBR_Origin.MaxY - this.MBR_Origin.MinY);
+        }
 
         /// <summary>
         /// 获取屏幕点的实际位置。

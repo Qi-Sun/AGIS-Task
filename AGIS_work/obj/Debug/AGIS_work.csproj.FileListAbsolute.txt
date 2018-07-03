@@ -32,3 +32,5 @@ F:\5-2\高级GIS\AGIS_work\AGIS_work\obj\Debug\AGIS_work.Forms.Grid.GenerateGrid
 F:\5-2\高级GIS\AGIS_work\AGIS_work\obj\Debug\AGIS_work.Forms.Grid.GenerateSubGridForm.resources
 F:\5-2\高级GIS\AGIS_work\AGIS_work\obj\Debug\AGIS_work.Forms.Grid.GridIntParaForm.resources
 F:\5-2\高级GIS\AGIS_work\AGIS_work\obj\Debug\AGIS_work.Forms.ContourLine.ContourLineSettingForm.resources
+F:\5-2\高级GIS\AGIS_work\AGIS_work\obj\Debug\AGIS_work.Forms.Topology.QueryPolygonInfoForm.resources
+F:\5-2\高级GIS\AGIS_work\AGIS_work\obj\Debug\AGIS_work.Forms.Topology.SaveTopologyTableForm.resources

@@ -72,6 +72,9 @@
             this.StatusLabelScreenX = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelScreenY = new System.Windows.Forms.ToolStripStatusLabel();
             this.StatusLabelScreenY = new System.Windows.Forms.ToolStripStatusLabel();
+            this.拓扑点ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.拓扑边ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.拓扑多边形ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.agisControl = new AGIS_work.AgisControl();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -312,6 +315,10 @@
             // 可视化ToolStripMenuItem
             // 
             this.可视化ToolStripMenuItem.CheckOnClick = true;
+            this.可视化ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.拓扑点ToolStripMenuItem,
+            this.拓扑边ToolStripMenuItem,
+            this.拓扑多边形ToolStripMenuItem});
             this.可视化ToolStripMenuItem.Name = "可视化ToolStripMenuItem";
             this.可视化ToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.可视化ToolStripMenuItem.Text = "可视化";
@@ -322,6 +329,7 @@
             this.查询ToolStripMenuItem.Name = "查询ToolStripMenuItem";
             this.查询ToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.查询ToolStripMenuItem.Text = "查询";
+            this.查询ToolStripMenuItem.CheckedChanged += new System.EventHandler(this.查询ToolStripMenuItem_CheckedChanged);
             this.查询ToolStripMenuItem.Click += new System.EventHandler(this.查询ToolStripMenuItem_Click);
             // 
             // 导出拓扑关系表ToolStripMenuItem
@@ -343,13 +351,13 @@
             // 作者信息ToolStripMenuItem
             // 
             this.作者信息ToolStripMenuItem.Name = "作者信息ToolStripMenuItem";
-            this.作者信息ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.作者信息ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.作者信息ToolStripMenuItem.Text = "作者信息";
             // 
             // 程序信息ToolStripMenuItem
             // 
             this.程序信息ToolStripMenuItem.Name = "程序信息ToolStripMenuItem";
-            this.程序信息ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.程序信息ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.程序信息ToolStripMenuItem.Text = "程序信息";
             this.程序信息ToolStripMenuItem.Click += new System.EventHandler(this.程序信息ToolStripMenuItem_Click);
             // 
@@ -417,6 +425,30 @@
             this.StatusLabelScreenY.Name = "StatusLabelScreenY";
             this.StatusLabelScreenY.Size = new System.Drawing.Size(25, 17);
             this.StatusLabelScreenY.Text = "0.0";
+            // 
+            // 拓扑点ToolStripMenuItem
+            // 
+            this.拓扑点ToolStripMenuItem.Name = "拓扑点ToolStripMenuItem";
+            this.拓扑点ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.拓扑点ToolStripMenuItem.Text = "拓扑点";
+            this.拓扑点ToolStripMenuItem.CheckedChanged += new System.EventHandler(this.拓扑点ToolStripMenuItem_CheckedChanged);
+            this.拓扑点ToolStripMenuItem.Click += new System.EventHandler(this.拓扑点ToolStripMenuItem_Click);
+            // 
+            // 拓扑边ToolStripMenuItem
+            // 
+            this.拓扑边ToolStripMenuItem.Name = "拓扑边ToolStripMenuItem";
+            this.拓扑边ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.拓扑边ToolStripMenuItem.Text = "拓扑边";
+            this.拓扑边ToolStripMenuItem.CheckedChanged += new System.EventHandler(this.拓扑边ToolStripMenuItem_CheckedChanged);
+            this.拓扑边ToolStripMenuItem.Click += new System.EventHandler(this.拓扑边ToolStripMenuItem_Click);
+            // 
+            // 拓扑多边形ToolStripMenuItem
+            // 
+            this.拓扑多边形ToolStripMenuItem.Name = "拓扑多边形ToolStripMenuItem";
+            this.拓扑多边形ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.拓扑多边形ToolStripMenuItem.Text = "拓扑多边形";
+            this.拓扑多边形ToolStripMenuItem.CheckedChanged += new System.EventHandler(this.拓扑多边形ToolStripMenuItem_CheckedChanged);
+            this.拓扑多边形ToolStripMenuItem.Click += new System.EventHandler(this.拓扑多边形ToolStripMenuItem_Click);
             // 
             // agisControl
             // 
@@ -505,6 +537,9 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelScreenY;
         private System.Windows.Forms.ToolStripStatusLabel StatusLabelScreenY;
         private System.Windows.Forms.ToolStripMenuItem 生成格网ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 拓扑点ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 拓扑边ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 拓扑多边形ToolStripMenuItem;
     }
 }
 

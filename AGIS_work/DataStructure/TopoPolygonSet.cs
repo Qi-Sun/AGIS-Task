@@ -23,7 +23,22 @@ namespace AGIS_work.DataStructure
                     TopoPolygonList.Add(gons[i]);
             }
         }
-        
+        public void Recheck(double regionArea)
+        {
+            double area_max = 0;
+            int pid_max_index = -1;
+            for (int i = 0; i < TopoPolygonList.Count; i++)
+            {
+                double area = TopoPolygonList[i].GetArea();
+                if (area > area_max)
+                {
+                    area_max = area;
+                    pid_max_index = i;
+                }
+            }
+            if (pid_max_index != -1 && area_max > 0.5 * regionArea)
+                TopoPolygonList.RemoveAt(pid_max_index);
+        }
 
         public bool IsPolygonExist(int pid)
         {
@@ -35,6 +50,16 @@ namespace AGIS_work.DataStructure
             return false;
         }
 
+
+        public TopoPolygon GetClickPointInsidePolygon(TopoPoint clickPoint)
+        {
+            foreach (var polygon in this.TopoPolygonList)
+            {
+                if (polygon.IfPointInRegion(clickPoint))
+                    return polygon;
+            }
+            return null; 
+        }
         
     }
 }

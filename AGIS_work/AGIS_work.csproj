@@ -138,6 +138,18 @@
     <Compile Include="Forms\Grid\GridIntParaForm.Designer.cs">
       <DependentUpon>GridIntParaForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Topology\QueryPolygonInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Topology\QueryPolygonInfoForm.Designer.cs">
+      <DependentUpon>QueryPolygonInfoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Topology\SaveTopologyTableForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Topology\SaveTopologyTableForm.Designer.cs">
+      <DependentUpon>SaveTopologyTableForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -166,6 +178,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Grid\GridIntParaForm.resx">
       <DependentUpon>GridIntParaForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Topology\QueryPolygonInfoForm.resx">
+      <DependentUpon>QueryPolygonInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Topology\SaveTopologyTableForm.resx">
+      <DependentUpon>SaveTopologyTableForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -198,7 +216,6 @@
   <ItemGroup>
     <Folder Include="Forms\Other\" />
     <Folder Include="Forms\Tin\" />
-    <Folder Include="Forms\Topology\" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\xunit.analyzers.0.8.0\analyzers\dotnet\cs\xunit.analyzers.dll" />

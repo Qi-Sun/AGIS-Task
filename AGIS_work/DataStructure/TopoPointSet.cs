@@ -174,6 +174,8 @@ namespace AGIS_work.DataStructure
             return new TopoPolygonSet(polygonList.ToArray());
         }
 
+        
+
         public void SortTheSearchLine(List<Tuple<TopoPoint, double, double, int, TopoPolyline>> lineToSort, double startAngle)
         {
             lineToSort.Sort((x, y) =>

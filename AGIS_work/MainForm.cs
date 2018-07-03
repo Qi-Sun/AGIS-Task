@@ -12,6 +12,7 @@ using AGIS_work.DataStructure;
 using AGIS_work.Forms.Grid;
 using AGIS_work.Mehtod;
 using AGIS_work.Forms.ContourLine;
+using AGIS_work.Forms.Topology;
 using System.Threading;
 
 namespace AGIS_work
@@ -90,10 +91,20 @@ namespace AGIS_work
         private TopoPolylineSet mTopoPolylineSet;
         private TopoPointSet mTopoPointSet;
 
+        // -- 拓扑交互
+        private bool ShowTopoPoint = false;
+        private bool ShowTopoPolyline = false;
+        private bool ShowTopoPolygon = false;
+        private bool IsQueryTopoPolygon = false;
+        private TopoPolygon SelectedTopoPolygon;
+
         private void MainForm_Load(object sender, EventArgs e)
         {
             GridLinePen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
             GridSubLinePen.DashStyle = System.Drawing.Drawing2D.DashStyle.DashDotDot;
+            mTopoPolygonSet = new TopoPolygonSet();
+            mTopoPolylineSet = new TopoPolylineSet();
+            mTopoPointSet = new TopoPointSet();
         }
 
         private void 打开ToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -148,37 +159,53 @@ namespace AGIS_work
                 //    g.DrawLines(this.TopolopyLinePen, pf);
                 //}
                 // -- 绘制多边形
-                foreach (var item in this.mTopoPolygonSet.TopoPolygonList)
+                if (this.ShowTopoPolygon == true)
                 {
-                    TopoPoint[] tempLines = item.ConvertToPointArray();
-                    Graphics g = e.Graphics;
-                    PointF[] pf = agisControl.GetScreenPoints(tempLines);
-                    Brush randomBrush = new SolidBrush(this.GetRandomColor());
-                    g.FillPolygon(randomBrush, pf);
-                    //Thread.Sleep(1000);
+                    foreach (var polygon in this.mTopoPolygonSet.TopoPolygonList)
+                    {
+                        TopoPoint[] tempLines = polygon.ConvertToPointArray();
+                        Graphics g = e.Graphics;
+                        PointF[] pf = agisControl.GetScreenPoints(tempLines);
+                        Brush randomBrush = new SolidBrush(this.GetRandomColor());
+                        g.FillPolygon(randomBrush, pf);
+                        //Thread.Sleep(1000);
+                    }
                 }
                 // -- 绘制折线
-                foreach (var line in this.mTopoPolylineSet.TopoPolylineList)
+                if (this.ShowTopoPolyline == true)
                 {
-                    Graphics g = e.Graphics;
-                    PointF[] pf = agisControl.GetScreenLine(line);
-                    g.DrawLines(this.TopolopyLinePen, pf);
+                    foreach (var line in this.mTopoPolylineSet.TopoPolylineList)
+                    {
+                        Graphics g = e.Graphics;
+                        PointF[] pf = agisControl.GetScreenLine(line);
+                        g.DrawLines(this.TopolopyLinePen, pf);
+                    }
+                    if (SelectedTopoPolygon!=null && this.IsQueryTopoPolygon == true)
+                    {
+                        TopoPoint[] tempLines = SelectedTopoPolygon.ConvertToPointArray();
+                        Graphics g = e.Graphics;
+                        PointF[] pf = agisControl.GetScreenPoints(tempLines);
+                        g.DrawLines(this.GridSelectedPointPen, pf);
+                    }
                 }
-                // -- 绘制中间点
-                foreach (var point in this.mTopoPointSet.TopoPointList)
+                if (this.ShowTopoPoint == true)
                 {
-                    Graphics g = e.Graphics;
-                    PointF pf = agisControl.GetScreenPoint(point);
-                    g.FillRectangle(TopologyPointBrush, pf.X - this.TopologyPixelHalfWidth, pf.Y - TopologyPixelHalfWidth,
-                        TopologyPixelHalfWidth * 2, TopologyPixelHalfWidth * 2);
-                }
-                // -- 绘制结点
-                foreach (var point in this.mTopoPointSet.TopoNodeList)
-                {
-                    Graphics g = e.Graphics;
-                    PointF pf = agisControl.GetScreenPoint(point);
-                    g.FillRectangle(TopologyNodeBrush, pf.X - this.TopologyPixelHalfWidth, pf.Y - TopologyPixelHalfWidth,
-                        TopologyPixelHalfWidth * 2, TopologyPixelHalfWidth * 2);
+                    // -- 绘制中间点
+                    foreach (var point in this.mTopoPointSet.TopoPointList)
+                    {
+                        Graphics g = e.Graphics;
+                        PointF pf = agisControl.GetScreenPoint(point);
+                        g.FillRectangle(TopologyPointBrush, pf.X - this.TopologyPixelHalfWidth, pf.Y - TopologyPixelHalfWidth,
+                            TopologyPixelHalfWidth * 2, TopologyPixelHalfWidth * 2);
+                    }
+                    // -- 绘制结点
+                    foreach (var point in this.mTopoPointSet.TopoNodeList)
+                    {
+                        Graphics g = e.Graphics;
+                        PointF pf = agisControl.GetScreenPoint(point);
+                        g.FillRectangle(TopologyNodeBrush, pf.X - this.TopologyPixelHalfWidth, pf.Y - TopologyPixelHalfWidth,
+                            TopologyPixelHalfWidth * 2, TopologyPixelHalfWidth * 2);
+                    }
                 }
 
             }
@@ -282,7 +309,7 @@ namespace AGIS_work
                         (float)agisControl.GetScreenLocY(point.Y) - PointHalfWidth, PointHalfWidth * 2, PointHalfWidth * 2);
                 }
             }
-            
+
 
         }
 
@@ -509,7 +536,7 @@ namespace AGIS_work
                                 {
                                     tempPointList.Add(new DataPoint(-i * 1000 - j, "等值点" + (-i * 1000 - j).ToString(),
                                         Grid_AxisX[i] + tempHH[i, j] * (Grid_AxisX[i + 1] - Grid_AxisX[i]),
-                                        Grid_AxisY[j], tempElevation, (-i * 1000 - j)*1000 + (int)tempElevation));
+                                        Grid_AxisY[j], tempElevation, (-i * 1000 - j) * 1000 + (int)tempElevation));
                                 }
                                 //竖边有等值点
                                 if (tempSS[i, j] < 2)
@@ -691,23 +718,32 @@ namespace AGIS_work
 
         private void 生成拓扑关系ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (GridContourPolylineList == null) return; 
+            if (GridContourPolylineList == null) return;
             this.GenerateTopologyRelatation(this.GridContourPolylineList);
             this.ConvertLineEdgeToPolyline();
             this.mTopoPointSet = new TopoPointSet(this.mTopoPolylineSet.TopoPolylineList.ToArray());
             this.mTopoPolygonSet = this.mTopoPointSet.GenerateTopoPolygonSet();
+            this.mTopoPolygonSet.Recheck(this.agisControl.GetRegionArea());
             return;
         }
 
         private void 可视化ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.ShowTopology = (可视化ToolStripMenuItem.Checked == true);
+            this.拓扑点ToolStripMenuItem.Checked = this.ShowTopology;
+            this.拓扑边ToolStripMenuItem.Checked = this.ShowTopology;
+            this.拓扑多边形ToolStripMenuItem.Checked = this.ShowTopology;
             this.agisControl.Refresh();
         }
 
         private void 查询ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //this.查询ToolStripMenuItem.Checked = (this.查询ToolStripMenuItem.Checked == false);
+            QueryPolygonInfoForm queryForm = new QueryPolygonInfoForm(this.mTopoPolygonSet);
+            if (queryForm.ShowDialog(this) == DialogResult.OK)
+            {
 
+            }
         }
 
         private void 导出拓扑关系表ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -766,7 +802,7 @@ namespace AGIS_work
                 || GridDivisionCount_Y * EachGridDivisionCount_Y < 1
                 || this.IsGridVisible == false)
                 return;
-            if (e.Clicks == 2 && this.IsQueryIntersection == true)
+            if (e.Clicks == 2 && this.IsQueryIntersection == true && this.ShowTopology == false)
             {
                 SelectPointX = SelectPointY = -1;
                 int gridScreen_AxisX_count = GridScreen_AxisX.Count;
@@ -814,7 +850,17 @@ namespace AGIS_work
                         ), "属性查询");
                 }
             }
-
+            if (e.Clicks == 2 && this.IsQueryTopoPolygon == true && this.ShowTopology == true && this.ShowTopoPolygon == true)
+            {
+                TopoPoint clickLoc = new TopoPoint(agisControl.GetRealWorldLocX(e.X), agisControl.GetRealWorldLocX(e.Y), 0, false);
+                this.SelectedTopoPolygon = this.mTopoPolygonSet.GetClickPointInsidePolygon(clickLoc);
+                this.agisControl.Refresh();
+                if (SelectedTopoPolygon != null)
+                    MessageBox.Show(string.Format("PID:{0}\r\n弧段数:{1}\r\n周长:{2}\r\n面积:{3}",
+                        SelectedTopoPolygon.PID, SelectedTopoPolygon.TopologyArcs.Count,
+                        SelectedTopoPolygon.GetPerimeter().ToString("0.00"),
+                        SelectedTopoPolygon.GetArea().ToString("0.00")), "多边形信息");
+            }
         }
 
         private void agisControl_Load(object sender, EventArgs e)
@@ -910,6 +956,45 @@ namespace AGIS_work
             foreach (var subEdge in mSubEdge)
                 topoLineList.Add(new TopoPolyline(subEdge));
             this.mTopoPolylineSet = new TopoPolylineSet(topoLineList.ToArray());
+        }
+
+        private void 拓扑点ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            拓扑点ToolStripMenuItem.Checked = (拓扑点ToolStripMenuItem.Checked == false);
+        }
+
+        private void 拓扑边ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            拓扑边ToolStripMenuItem.Checked = (拓扑边ToolStripMenuItem.Checked == false);
+        }
+
+        private void 拓扑多边形ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            拓扑多边形ToolStripMenuItem.Checked = (拓扑多边形ToolStripMenuItem.Checked == false);
+        }
+
+
+        private void 拓扑点ToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            this.ShowTopoPoint = 拓扑点ToolStripMenuItem.Checked;
+            this.Refresh();
+        }
+
+        private void 拓扑边ToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            this.ShowTopoPolyline = 拓扑边ToolStripMenuItem.Checked;
+            this.Refresh();
+        }
+
+        private void 拓扑多边形ToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            this.ShowTopoPolygon = 拓扑多边形ToolStripMenuItem.Checked;
+            this.Refresh();
+        }
+
+        private void 查询ToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            this.IsQueryTopoPolygon = 查询ToolStripMenuItem.Checked;
         }
     }
 }

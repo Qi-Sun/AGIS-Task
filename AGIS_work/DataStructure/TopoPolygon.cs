@@ -95,6 +95,43 @@ namespace AGIS_work.DataStructure
             return perimeter;
         }
 
-        
+        public bool IfPointInRegion(TopoPoint todeterPoint)
+        {
+            TopoPoint[] points = this.ConvertToPointArray();
+            TopoPoint rayPoint = new TopoPoint(todeterPoint.X * 2, todeterPoint.Y, todeterPoint.Z, false);
+            int intersectCount = 0;
+            for (int i = 0; i < points.Length - 1; i++)
+            {
+                if (TopoPolygon.IntersectPoint(points[i], points[i + 1], todeterPoint, rayPoint) == true)
+                    intersectCount++;
+            }
+            return (intersectCount / 2 != 0);
+        }
+
+        public static bool IntersectPoint(TopoPoint p1, TopoPoint p2, TopoPoint todeterPoint, TopoPoint rays)
+        {
+            double IntersectX =
+                ((p2.X - p1.X) * (todeterPoint.X - rays.X) * (todeterPoint.Y - p1.Y) -
+                todeterPoint.X * (p2.X - p1.X) * (todeterPoint.Y - rays.Y) +
+                p1.X * (p2.Y - p1.Y) * (todeterPoint.X - rays.X)) /
+                ((p2.Y - p1.Y) * (todeterPoint.X - rays.X) -
+                (p2.X - p1.X) * (todeterPoint.Y - rays.Y));
+            double IntersectY =
+                ((p2.Y - p1.Y) * (todeterPoint.Y - rays.Y) * (todeterPoint.X - p1.X) -
+                todeterPoint.Y * (p2.Y - p1.Y) * (todeterPoint.X - rays.X) +
+                p1.Y * (p2.X - p1.X) * (todeterPoint.Y - rays.Y)) /
+                ((p2.X - p1.X) * (todeterPoint.Y - rays.Y) -
+                (p2.Y - p1.Y) * (todeterPoint.X - rays.X));
+            double relativeE1 = 0;
+            if ((p2.X - p1.X) != 0)
+                relativeE1 = (IntersectX - p1.X) / (p2.X - p1.X);
+            else relativeE1 = (IntersectY - p1.Y) / (p2.Y - p1.Y);
+            if (0 <= relativeE1 && relativeE1 < 1)
+                return true;
+            else return false;
+        }
+
+
+
     }
 }
