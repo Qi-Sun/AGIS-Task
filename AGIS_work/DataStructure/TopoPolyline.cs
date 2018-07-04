@@ -6,21 +6,22 @@ using System.Threading.Tasks;
 
 namespace AGIS_work.DataStructure
 {
+    //拓扑边
     public class TopoPolyline
     {
-        public int ArcID { get; private set; }
-        private int _ArcID = 0;
-        public int Innerid { get; private set; }
-        public TopoPoint BeginNode { get; private set; }
-        public TopoPoint EndNode { get; private set; }
-        public List<TopoPoint> MiddlePoint { get; private set; }
-        public TopoPolygon LeftPolygon { get; set; }
-        public TopoPolygon RightPolygon { get; set; }
+        public int ArcID { get; private set; }//唯一标识码
+        private static int _ArcID = 0;
+        public int Innerid { get; private set; }//内部码
+        public TopoPoint BeginNode { get; private set; }//起始节点
+        public TopoPoint EndNode { get; private set; }//终止节点
+        public List<TopoPoint> MiddlePoint { get; private set; }//中间点序列
+        public TopoPolygon LeftPolygon { get; set; }//左多边形
+        public TopoPolygon RightPolygon { get; set; }//右多边形
         public MinBoundRect MBR { get; private set; }
 
         public TopoPolyline()
         {
-            this.ArcID = _ArcID ++;
+            this.ArcID = _ArcID++;
             MiddlePoint = new List<TopoPoint>();
             Innerid = this.ArcID;
             MBR = new MinBoundRect();
@@ -54,7 +55,6 @@ namespace AGIS_work.DataStructure
                     MBR.UpdateRect(polyline.PointList[i].X, polyline.PointList[i].Y);
                 }
             }
-            
         }
 
         public TopoPolyline(Edge edge)
@@ -71,7 +71,7 @@ namespace AGIS_work.DataStructure
             MBR.UpdateRect(startPoint.X, startPoint.Y);
             MBR.UpdateRect(endPoint.X, endPoint.Y);
         }
-
+        //获取另一结点
         public TopoPoint GetAnotherNode(TopoPoint p)
         {
             if (this.BeginNode.PointID == p.PointID)
@@ -80,35 +80,30 @@ namespace AGIS_work.DataStructure
                 return this.BeginNode;
             else return null;
         }
-
+        //获取起始节点的角度
         public double GetBeginNodeAngle()
         {
-            if (MiddlePoint.Count < 1)
-                return this.BeginNode.GetPositon(this.EndNode);
+            if (MiddlePoint.Count < 1) return this.BeginNode.GetPositon(this.EndNode);
             else return this.BeginNode.GetPositon(this.MiddlePoint[0]);
         }
-
+        //获取终止节点的角度
         public double GetEndNodeAngle()
         {
-            if (MiddlePoint.Count < 1)
-                return this.EndNode.GetPositon(this.BeginNode);
+            if (MiddlePoint.Count < 1) return this.EndNode.GetPositon(this.BeginNode);
             else return this.EndNode.GetPositon(this.MiddlePoint[0]);
         }
-
+        //判断是否是结点
         public int IsNode(TopoPoint p)
         {
-            if (this.BeginNode.PointID == p.PointID)
-                return 1;
-            else if (this.EndNode.PointID == p.PointID)
-                return -1;
+            if (this.BeginNode.PointID == p.PointID) return 1;
+            else if (this.EndNode.PointID == p.PointID) return -1;
             else return 0;
         }
 
         public override string ToString()
         {
             return string.Format("ArcID:{0},StartID:{1},EndID:{2},MPointCount:{3}",
-                this.ArcID, this.BeginNode.PointID, this.EndNode.PointID, this.MiddlePoint.Count);
+                   this.ArcID, this.BeginNode.PointID, this.EndNode.PointID, this.MiddlePoint.Count);
         }
-        
     }
 }

@@ -7,28 +7,25 @@ using System.Threading.Tasks;
 
 namespace AGIS_work.Mehtod
 {
+    //插值类型
     public enum GridInterpolationMehtod
     {
         None = 0,
         距离平方倒数法 = 1,
         按方位加权平均法 = 2
     }
-
+    //插值算法
     public class GridInterpolation
     {
         public PointSet mPointSet { get; private set; }
         public GridInterpolation(PointSet pointSet)
-        {
-            this.mPointSet = pointSet;
-        }
-        
-        public double CalculateValueBy距离平方倒数法(double x,double y,int pts)
+        { this.mPointSet = pointSet; }
+        //距离平方倒数法
+        public double CalculateValueBy距离平方倒数法(double x, double y, int pts)
         {
             List<Tuple<DataPoint, double>> PointAndDistanceList = new List<Tuple<DataPoint, double>>();
             foreach (var point in mPointSet.PointList)
-            {
-                PointAndDistanceList.Add(new Tuple<DataPoint, double>(point, point.GetDistance(x, y)));
-            }
+            { PointAndDistanceList.Add(new Tuple<DataPoint, double>(point, point.GetDistance(x, y))); }
             PointAndDistanceList.Sort((t1, t2) => t1.Item2.CompareTo(t2.Item2));
             double sDenominator = 0; //分母
             double sNumerator = 0;  //分子
@@ -39,8 +36,8 @@ namespace AGIS_work.Mehtod
             }
             return sNumerator / sDenominator;
         }
-
-        public double CalculateValueBy按方位加权平均法(double x, double y,int sectorNums)
+        //按方位加权平均法
+        public double CalculateValueBy按方位加权平均法(double x, double y, int sectorNums)
         {
             List<Tuple<DataPoint, double>>[] PointPositionDistanceList
                 = new List<Tuple<DataPoint, double>>[sectorNums];

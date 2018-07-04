@@ -6,18 +6,19 @@ using System.Threading.Tasks;
 
 namespace AGIS_work.DataStructure
 {
+    //拓扑点
     public class TopoPoint
     {
         private static int _pointID = 0;
-        public int Innerid = 0;
-        public int PointID { get; private set; }
-        public bool IsNode { get; private set; }
+        public int Innerid = 0; //内部码
+        public int PointID { get; private set; }    //唯一标识
+        public bool IsNode { get; private set; }    //是否是结点
         public double X { get; private set; }
         public double Y { get; private set; }
         public double Z { get; private set; }
-        public List<TopoPolyline> TopologyArcs { get; private set; }
+        public List<TopoPolyline> TopologyArcs { get; private set; }//相关弧段
 
-        public TopoPoint(DataPoint dpoint,bool isNode)
+        public TopoPoint(DataPoint dpoint, bool isNode)
         {
             this.PointID = dpoint.OID;
             this.IsNode = isNode;
@@ -28,7 +29,7 @@ namespace AGIS_work.DataStructure
             Innerid = _pointID++;
         }
 
-        public TopoPoint(double x,double y,double  z, bool isNode)
+        public TopoPoint(double x, double y, double z, bool isNode)
         {
             this.PointID = _pointID++;
             this.IsNode = isNode;
@@ -37,7 +38,6 @@ namespace AGIS_work.DataStructure
             this.Z = z;
             this.TopologyArcs = new List<TopoPolyline>();
             Innerid = _pointID++;
-
         }
         /// <summary>
         /// 获取另一点对于当前点的方位角(角度)
@@ -47,8 +47,8 @@ namespace AGIS_work.DataStructure
         /// <returns></returns>
         public double GetPosition(double x, double y)
         {
-            double deltaX = x-this.X;
-            double deltaY = y-this.Y;
+            double deltaX = x - this.X;
+            double deltaY = y - this.Y;
             if (deltaX * deltaY == 0)
             {
                 if (deltaX == 0)
@@ -94,14 +94,11 @@ namespace AGIS_work.DataStructure
             return this.GetPosition(p.X, p.Y);
         }
 
+        //获取与另一点距离
         public double GetDistance(TopoPoint other)
-        {
-            return Math.Sqrt(Math.Pow(this.X - other.X, 2) + Math.Pow(this.Y - other.Y, 2));
-        }
+        { return Math.Sqrt(Math.Pow(this.X - other.X, 2) + Math.Pow(this.Y - other.Y, 2)); }
 
         public override string ToString()
-        {
-            return string.Format("PointID:{0},IsNode:{1}", this.PointID, this.IsNode.ToString());
-        }
+        { return string.Format("PointID:{0},IsNode:{1}", this.PointID, this.IsNode.ToString()); }
     }
 }

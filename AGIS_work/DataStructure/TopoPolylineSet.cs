@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace AGIS_work.DataStructure
 {
+    //拓扑边集合
     public class TopoPolylineSet
     {
         public List<TopoPolyline> TopoPolylineList { get; private set; }
@@ -20,12 +21,9 @@ namespace AGIS_work.DataStructure
             this.TopoPolylineList = new List<TopoPolyline>();
             this.TopoPolylineList.AddRange(lines);
         }
-
         public override string ToString()
-        {
-            return base.ToString();
-        }
-
+        { return base.ToString(); }
+        //保存边拓扑关系至文件
         public void SavePolylineTableToFile(string filename)
         {
             StreamWriter sw = new StreamWriter(filename);

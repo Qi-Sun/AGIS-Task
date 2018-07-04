@@ -24,9 +24,6 @@ namespace AGIS_work
             InitializeComponent();
             this.agisControl.MouseWheel += this.agisControl_MouseWheel;
         }
-
-
-
         public PointSet mPointSet;
 
         public UserOperationType UserOperation;
@@ -65,6 +62,7 @@ namespace AGIS_work
         public double[,] GridValueMatrix = null;
         public double[,] SS = null;
         public double[,] HH = null;
+        private bool ContourLineUseSpline = false;
 
         // -- Tin相关
         public bool ShowTin = false;
@@ -75,7 +73,7 @@ namespace AGIS_work
         public int ContourLineType = 0; //0:不显示，1：根据格网，2：根据Tin
         public bool ShowContourLine = true;
         public Edge[] TinContourLineList = null;
-        public Pen TinContourLinePen = new Pen(Color.Gray, 1.0f);
+        public Pen TinContourLinePen = new Pen(Color.Gray, 1.5f);
 
         // -- 拓扑关系相关
         private List<ContourPolyline> mSubPolyline;
@@ -109,7 +107,6 @@ namespace AGIS_work
 
         private void 打开ToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-
             OpenFileForm openFile = new OpenFileForm();
             if (openFile.ShowDialog() == DialogResult.OK)
             {
@@ -124,14 +121,10 @@ namespace AGIS_work
         }
 
         private void agisControl_Resize(object sender, EventArgs e)
-        {
-            agisControl.Refresh();
-        }
+        {agisControl.Refresh();}
 
         private void agisControl_MarginChanged(object sender, EventArgs e)
-        {
-            agisControl.Refresh();
-        }
+        {agisControl.Refresh();}
 
         private void agisControl_Paint(object sender, PaintEventArgs e)
         {
@@ -141,23 +134,6 @@ namespace AGIS_work
             //绘制拓扑数据
             if (this.ShowTopology == true)
             {
-
-                //foreach (var subEdge in this.mSubEdge)
-                //{
-                //    DataPoint point = subEdge.StartPoint;
-                //    Graphics g = e.Graphics;
-                //    PointF pf = agisControl.GetScreenLocation(point.X, point.Y);
-                //    g.FillRectangle(TopologyBrush, (float)agisControl.GetScreenLocX(point.X) - this.TopologyPixelHalfWidth,
-                //        (float)agisControl.GetScreenLocY(point.Y) - TopologyPixelHalfWidth,
-                //        TopologyPixelHalfWidth * 2, TopologyPixelHalfWidth * 2);
-                //}
-                //foreach (var subEdge in this.mSubEdge)
-                //{
-                //    DataPoint point = subEdge.StartPoint;
-                //    Graphics g = e.Graphics;
-                //    PointF[] pf = agisControl.GetScreenEdge(subEdge);
-                //    g.DrawLines(this.TopolopyLinePen, pf);
-                //}
                 // -- 绘制多边形
                 if (this.ShowTopoPolygon == true)
                 {
@@ -181,33 +157,26 @@ namespace AGIS_work
                         g.DrawLines(this.TopolopyLinePen, pf);
                     }
                     if (SelectedTopoPolygon != null && this.IsQueryTopoPolygon == true)
-                    {
-                        TopoPoint[] tempLines = SelectedTopoPolygon.ConvertToPointArray();
+                    {TopoPoint[] tempLines = SelectedTopoPolygon.ConvertToPointArray();
                         Graphics g = e.Graphics;
                         PointF[] pf = agisControl.GetScreenPoints(tempLines);
-                        g.DrawLines(this.GridSelectedPointPen, pf);
-                    }
+                        g.DrawLines(this.GridSelectedPointPen, pf);}
                 }
                 if (this.ShowTopoPoint == true)
                 {
                     // -- 绘制中间点
                     foreach (var point in this.mTopoPointSet.TopoPointList)
-                    {
-                        Graphics g = e.Graphics;
+                    {Graphics g = e.Graphics;
                         PointF pf = agisControl.GetScreenPoint(point);
                         g.FillRectangle(TopologyPointBrush, pf.X - this.TopologyPixelHalfWidth, pf.Y - TopologyPixelHalfWidth,
-                            TopologyPixelHalfWidth * 2, TopologyPixelHalfWidth * 2);
-                    }
+                            TopologyPixelHalfWidth * 2, TopologyPixelHalfWidth * 2); }
                     // -- 绘制结点
                     foreach (var point in this.mTopoPointSet.TopoNodeList)
-                    {
-                        Graphics g = e.Graphics;
+                    {Graphics g = e.Graphics;
                         PointF pf = agisControl.GetScreenPoint(point);
                         g.FillRectangle(TopologyNodeBrush, pf.X - this.TopologyPixelHalfWidth, pf.Y - TopologyPixelHalfWidth,
-                            TopologyPixelHalfWidth * 2, TopologyPixelHalfWidth * 2);
-                    }
+                            TopologyPixelHalfWidth * 2, TopologyPixelHalfWidth * 2);}
                 }
-
             }
             //在网格中
             if (this.UserOperation == UserOperationType.DisplayInGrid)
@@ -226,10 +195,8 @@ namespace AGIS_work
                         g.DrawLine(this.GridLinePen, MinPointXY.X + i * (width / GridDivisionCount_X), MinPointXY.Y,
                            MinPointXY.X + i * (width / GridDivisionCount_X), MaxPointXY.Y);
                         for (int ii = 1; ii < EachGridDivisionCount_X; ii++)
-                        {
-                            g.DrawLine(this.GridSubLinePen, MinPointXY.X + (i + ii * 1.0f / EachGridDivisionCount_X) * (width / GridDivisionCount_X), MinPointXY.Y,
-                           MinPointXY.X + (i + ii * 1.0f / EachGridDivisionCount_X) * (width / GridDivisionCount_X), MaxPointXY.Y);
-                        }
+                        {g.DrawLine(this.GridSubLinePen, MinPointXY.X + (i + ii * 1.0f / EachGridDivisionCount_X) * (width / GridDivisionCount_X), MinPointXY.Y,
+                           MinPointXY.X + (i + ii * 1.0f / EachGridDivisionCount_X) * (width / GridDivisionCount_X), MaxPointXY.Y);}
                     }
                     g.DrawLine(this.GridLinePen, MinPointXY.X + width, MinPointXY.Y, MinPointXY.X + width, MaxPointXY.Y);
                     for (int j = 0; j < GridDivisionCount_Y; j++)
@@ -237,17 +204,14 @@ namespace AGIS_work
                         g.DrawLine(this.GridLinePen, MinPointXY.X, MinPointXY.Y + j * (height / GridDivisionCount_Y),
                            MaxPointXY.X, MinPointXY.Y + j * (height / GridDivisionCount_Y));
                         for (int jj = 0; jj < EachGridDivisionCount_Y; jj++)
-                        {
-                            g.DrawLine(this.GridSubLinePen, MinPointXY.X, MinPointXY.Y + (j + jj * 1.0f / EachGridDivisionCount_Y) * (height / GridDivisionCount_Y),
-                           MaxPointXY.X, MinPointXY.Y + (j + jj * 1.0f / EachGridDivisionCount_Y) * (height / GridDivisionCount_Y));
-                        }
+                        { g.DrawLine(this.GridSubLinePen, MinPointXY.X, MinPointXY.Y + (j + jj * 1.0f / EachGridDivisionCount_Y) * (height / GridDivisionCount_Y),
+                           MaxPointXY.X, MinPointXY.Y + (j + jj * 1.0f / EachGridDivisionCount_Y) * (height / GridDivisionCount_Y));}
                     }
                     g.DrawLine(this.GridLinePen, MinPointXY.X, MinPointXY.Y + height, MaxPointXY.X, MinPointXY.Y + height);
                     if (this.IsQueryIntersection == true && SelectPointX != 0 && SelectPointY != 0)
                     {
                         double sScreenSelectPointX = this.agisControl.GetScreenLocX(SelectPointX);
                         double sScreenSelectPointY = this.agisControl.GetScreenLocY(SelectPointY);
-
                         g.DrawEllipse(this.GridSelectedPointPen, (float)sScreenSelectPointX - SelectPixelThreshold,
                             (float)sScreenSelectPointY - SelectPixelThreshold,
                             SelectPixelThreshold * 2, SelectPixelThreshold * 2);
@@ -257,11 +221,9 @@ namespace AGIS_work
                 if (ShowContourLine == true && GridContourList != null)
                 {
                     for (int i = 0; i < GridContourList.Length; i++)
-                    {
-                        PointF[] screenLine = agisControl.GetScreenEdge(GridContourList[i]);
+                    { PointF[] screenLine = agisControl.GetScreenEdge(GridContourList[i]);
                         Graphics g = e.Graphics;
-                        g.DrawLine(GridContourLinePen, screenLine[0], screenLine[1]);
-                    }
+                        g.DrawLine(GridContourLinePen, screenLine[0], screenLine[1]);}
                 }
                 if (ShowContourLine == true && GridContourPolylineList != null)
                 {
@@ -269,7 +231,9 @@ namespace AGIS_work
                     {
                         PointF[] screenLine = agisControl.GetScreenEdge(GridContourPolylineList[i]);
                         Graphics g = e.Graphics;
-                        float tension = 0.2f /* (float)(agisControl.ZoomScale / agisControl.Zoom)*/;
+                        float tension = 0f;
+                        if (ContourLineUseSpline)
+                            tension = 0.25f /* (float)(agisControl.ZoomScale / agisControl.Zoom)*/;
                         if (screenLine.Length > 1)
                             g.DrawCurve(GridContourLinePen, screenLine, tension);
                     }
@@ -279,23 +243,17 @@ namespace AGIS_work
             {
                 //绘制三角网
                 if (ShowTin == true && TinEdges != null)
-                {
-                    for (int i = 0; i < TinEdges.Length; i++)
-                    {
-                        PointF[] screenLine = agisControl.GetScreenEdge(TinEdges[i]);
+                {for (int i = 0; i < TinEdges.Length; i++)
+                    {PointF[] screenLine = agisControl.GetScreenEdge(TinEdges[i]);
                         Graphics g = e.Graphics;
-                        g.DrawLine(TinPen, screenLine[0], screenLine[1]);
-                    }
-                }
+                        g.DrawLine(TinPen, screenLine[0], screenLine[1]);} }
                 //绘制等高线
                 if (ShowContourLine == true && TinContourLineList != null)
                 {
                     for (int i = 0; i < TinContourLineList.Length; i++)
-                    {
-                        PointF[] screenLine = agisControl.GetScreenEdge(TinContourLineList[i]);
+                    {PointF[] screenLine = agisControl.GetScreenEdge(TinContourLineList[i]);
                         Graphics g = e.Graphics;
-                        g.DrawLine(TinContourLinePen, screenLine[0], screenLine[1]);
-                    }
+                        g.DrawLine(TinContourLinePen, screenLine[0], screenLine[1]);}
                 }
             }
 
@@ -303,11 +261,9 @@ namespace AGIS_work
             if (mPointSet != null)
             {
                 foreach (var point in mPointSet.PointList)
-                {
-                    Graphics g = e.Graphics;
+                {Graphics g = e.Graphics;
                     g.FillEllipse(PointIconBrush, (float)agisControl.GetScreenLocX(point.X) - this.PointHalfWidth,
-                        (float)agisControl.GetScreenLocY(point.Y) - PointHalfWidth, PointHalfWidth * 2, PointHalfWidth * 2);
-                }
+                        (float)agisControl.GetScreenLocY(point.Y) - PointHalfWidth, PointHalfWidth * 2, PointHalfWidth * 2);}
             }
 
 
@@ -359,19 +315,13 @@ namespace AGIS_work
                     break;
             }
             if (this.UserOperation == UserOperationType.DisplayInGrid)
-            {
-                if (this.IsGridVisible && this.IsQueryIntersection && this.agisControl.IsPanning)
-                    GridDivisionScreenRefresh();
-            }
+            {if (this.IsGridVisible && this.IsQueryIntersection && this.agisControl.IsPanning)GridDivisionScreenRefresh();}
         }
 
         private void agisControl_MouseWheel(object sender, MouseEventArgs e)
         {
             if (this.UserOperation == UserOperationType.DisplayInGrid)
-            {
-                if (this.IsGridVisible && this.IsQueryIntersection)
-                    GridDivisionScreenRefresh();
-            }
+            {if (this.IsGridVisible && this.IsQueryIntersection)GridDivisionScreenRefresh();}
         }
 
         private void 距离平方倒数法ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -380,8 +330,7 @@ namespace AGIS_work
 
             if (agisControl.PointSet == null) return;
             int tempPara = agisControl.距离平方倒数法NearPts;
-            if (tempPara < 0)
-                tempPara = Math.Max(agisControl.PointSet.PointList.Count / 4, 1);
+            if (tempPara < 0) tempPara = Math.Max(agisControl.PointSet.PointList.Count / 4, 1);
             GridIntParaForm form = new GridIntParaForm("取插值点邻域内最近的N个点", tempPara, 1, agisControl.PointSet.PointList.Count);
             if (form.ShowDialog(this) == DialogResult.OK)
             {
@@ -417,27 +366,20 @@ namespace AGIS_work
         private void 加密网格toolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (this.UserOperation != UserOperationType.DisplayInGrid)
-            {
-                MessageBox.Show("请先生成格网！", "提示");
-                return;
-            }
+            {MessageBox.Show("请先生成格网！", "提示");return;}
             if (this.IsGridVisible == false)
             {
                 if (MessageBox.Show(this, "当先设置为不显示格网，继续操作将显示格网，是否继续？", "提示", MessageBoxButtons.OKCancel)
                     != DialogResult.OK)
-                {
-                    this.IsGridVisible = true;
-                    this.显示隐藏格网ToolStripMenuItem.Checked = true;
-                }
+                { this.IsGridVisible = true;
+                    this.显示隐藏格网ToolStripMenuItem.Checked = true;}
                 else
                     return;
             }
             GenerateSubGridForm form = new GenerateSubGridForm(this.EachGridDivisionCount_X, this.EachGridDivisionCount_Y);
             if (form.ShowDialog(this) == DialogResult.OK)
-            {
-                this.EachGridDivisionCount_X = form.Division_X;
-                this.EachGridDivisionCount_Y = form.Division_Y;
-            }
+            {this.EachGridDivisionCount_X = form.Division_X;
+                this.EachGridDivisionCount_Y = form.Division_Y;}
             GridDivisionRefresh();
             this.agisControl.Refresh();
         }
@@ -469,49 +411,35 @@ namespace AGIS_work
             int TotalSegmentNum_Y = GridDivisionCount_Y * EachGridDivisionCount_Y;
             GridScreen_AxisX = new List<double>();
             for (int i = 0; i <= TotalSegmentNum_X; i++)
-            {
-                double screenX = agisControl.GetScreenLocX(Grid_AxisX[i]);
+            {double screenX = agisControl.GetScreenLocX(Grid_AxisX[i]);
                 if (screenX >= 0 && screenX < agisControl.Width)
-                    GridScreen_AxisX.Add(screenX);
-            }
+                    GridScreen_AxisX.Add(screenX);}
             GridScreen_AxisY = new List<double>();
             for (int i = 0; i <= TotalSegmentNum_Y; i++)
-            {
-                double screenY = agisControl.GetScreenLocY(Grid_AxisY[i]);
+            {double screenY = agisControl.GetScreenLocY(Grid_AxisY[i]);
                 if (screenY >= 0 && screenY < agisControl.Height)
-                    GridScreen_AxisY.Add(screenY);
-            }
+                    GridScreen_AxisY.Add(screenY);}
             return;
         }
 
         private void 查询节点属性ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (this.agisControl.GridIntMethod == Mehtod.GridInterpolationMehtod.None)
-            {
-                MessageBox.Show("尚未选择格网插值方法！\r\n请在“格网模型”中选择“距离平方倒数法”或“按方位加权平均法”！", "提示");
-                return;
-            }
+            {MessageBox.Show("尚未选择格网插值方法！\r\n请在“格网模型”中选择“距离平方倒数法”或“按方位加权平均法”！", "提示");
+                return;}
             this.IsQueryIntersection = (this.IsQueryIntersection == true) ? false : true;
             this.查询节点属性ToolStripMenuItem.Checked = this.IsQueryIntersection;
             if (this.查询节点属性ToolStripMenuItem.Checked == true)
-            {
-                MessageBox.Show(" ‘双击’ 进行选取格网交点", "提示");
-            }
+            { MessageBox.Show(" ‘双击’ 进行选取格网交点", "提示");}
             return;
         }
 
         private void 生成等值线ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (this.UserOperation != UserOperationType.DisplayInGrid)
-            {
-                MessageBox.Show("当前并没有在格网下显示，请先生成网格！", "提示");
-                return;
-            }
+            {MessageBox.Show("当前并没有在格网下显示，请先生成网格！", "提示");return;}
             else if (this.agisControl.GridIntMethod == Mehtod.GridInterpolationMehtod.None)
-            {
-                MessageBox.Show("尚未选择格网插值方法！\r\n请在“格网模型”中选择“距离平方倒数法”或“按方位加权平均法”！", "提示");
-                return;
-            }
+            { MessageBox.Show("尚未选择格网插值方法！\r\n请在“格网模型”中选择“距离平方倒数法”或“按方位加权平均法”！", "提示");return;}
             else
             {
                 this.生成等值线ToolStripMenuItem.Checked = (this.生成等值线ToolStripMenuItem.Checked == false);
@@ -534,7 +462,6 @@ namespace AGIS_work
                         double[,] tempSS = 内插等值点_SS(tempElevation);
                         int Grid_Count_all_X = this.EachGridDivisionCount_X * this.GridDivisionCount_X;
                         int Grid_Count_all_Y = this.EachGridDivisionCount_Y * this.GridDivisionCount_Y;
-
                         for (int i = 0; i < Grid_Count_all_X; i++)
                         {
                             for (int j = 0; j < Grid_Count_all_Y; j++)
@@ -542,49 +469,36 @@ namespace AGIS_work
                                 List<DataPoint> tempPointList = new List<DataPoint>();
                                 //横边有等值点
                                 if (tempHH[i, j] < 2)
-                                {
-                                    tempPointList.Add(new DataPoint(-i * 1000 - j, "等值点" + (-i * 1000 - j).ToString(),
+                                {tempPointList.Add(new DataPoint(-i * 1000 - j, "等值点" + (-i * 1000 - j).ToString(),
                                         Grid_AxisX[i] + tempHH[i, j] * (Grid_AxisX[i + 1] - Grid_AxisX[i]),
-                                        Grid_AxisY[j], tempElevation, (-i * 1000 - j) * 1000 + (int)tempElevation));
-                                }
+                                        Grid_AxisY[j], tempElevation, (-i * 1000 - j) * 1000 + (int)tempElevation));}
                                 //竖边有等值点
                                 if (tempSS[i, j] < 2)
-                                {
-                                    tempPointList.Add(new DataPoint(i * 1000 + j, "等值点" + (i * 1000 + j).ToString(),
+                                {tempPointList.Add(new DataPoint(i * 1000 + j, "等值点" + (i * 1000 + j).ToString(),
                                         Grid_AxisX[i],
                                         Grid_AxisY[j] + tempSS[i, j] * (Grid_AxisY[j + 1] - Grid_AxisY[j]),
-                                        tempElevation, (i * 1000 + j) * 1000 + (int)tempElevation));
-                                }
+                                        tempElevation, (i * 1000 + j) * 1000 + (int)tempElevation)); }
                                 //另一条横边有等值点
                                 if (tempHH[i, j + 1] < 2)
-                                {
-                                    tempPointList.Add(new DataPoint(-i * 1000 - j - 1, "等值点" + (-i * 1000 - j - 1).ToString(),
+                                {tempPointList.Add(new DataPoint(-i * 1000 - j - 1, "等值点" + (-i * 1000 - j - 1).ToString(),
                                         Grid_AxisX[i] + tempHH[i, j + 1] * (Grid_AxisX[i + 1] - Grid_AxisX[i]),
-                                        Grid_AxisY[j + 1], tempElevation, (-i * 1000 - j - 1) * 1000 + (int)tempElevation));
-                                }
+                                        Grid_AxisY[j + 1], tempElevation, (-i * 1000 - j - 1) * 1000 + (int)tempElevation));}
                                 //另一条竖边有等值点
                                 if (tempSS[i + 1, j] < 2)
-                                {
-                                    tempPointList.Add(new DataPoint((i + 1) * 1000 + j, "等值点" + ((1 + i) * 1000 + j).ToString(),
+                                {tempPointList.Add(new DataPoint((i + 1) * 1000 + j, "等值点" + ((1 + i) * 1000 + j).ToString(),
                                         Grid_AxisX[i + 1],
                                         Grid_AxisY[j] + tempSS[i + 1, j] * (Grid_AxisY[j + 1] - Grid_AxisY[j]),
-                                        tempElevation, ((i + 1) * 1000 + j) * 1000 + (int)tempElevation));
-                                }
+                                        tempElevation, ((i + 1) * 1000 + j) * 1000 + (int)tempElevation));}
                                 if (tempPointList.Count < 2)//无等值线
                                     continue;
                                 else if (tempPointList.Count < 4)
-                                {
-                                    tempGridContourLineList.Add(new Edge(tempPointList[0], tempPointList[1]));
-                                }
+                                {tempGridContourLineList.Add(new Edge(tempPointList[0], tempPointList[1]));}
                                 else
-                                {
-                                    tempGridContourLineList.Add(new Edge(tempPointList[0], tempPointList[1]));
-                                    tempGridContourLineList.Add(new Edge(tempPointList[2], tempPointList[3]));
-                                }
+                                {tempGridContourLineList.Add(new Edge(tempPointList[0], tempPointList[1]));
+                                    tempGridContourLineList.Add(new Edge(tempPointList[2], tempPointList[3]));}
                             }
                         }
                         tempContourPolyline = EdgeSet.TopologyGenerateContourPolylineSet(tempGridContourLineList.ToArray());
-
                         /*另一种方法 
                         GridCreateContourLine CreateContourLineClass = new GridCreateContourLine(this.Grid_AxisX, this.Grid_AxisY,
                             tempHH, tempSS, Grid_Count_all_X, Grid_Count_all_Y, tempElevation);
@@ -606,18 +520,12 @@ namespace AGIS_work
             List<double> tempGridAxisY = new List<double>();
             tempGridAxisX.AddRange(Grid_AxisX);
             tempGridAxisY.AddRange(Grid_AxisY);
-            //tempGridAxisX.Add(Grid_AxisX.Last() + Grid_AxisX[1] - Grid_AxisX[0]);
-            //tempGridAxisY.Add(Grid_AxisY.Last() + Grid_AxisY[1] - Grid_AxisY[0]);
             int Grid_Count_all_X = this.EachGridDivisionCount_X * this.GridDivisionCount_X;
             int Grid_Count_all_Y = this.EachGridDivisionCount_Y * this.GridDivisionCount_Y;
             double[,] GridRealLoc = new double[Grid_Count_all_X + 1, Grid_Count_all_Y + 1];
             for (int i = 0; i <= Grid_Count_all_X; i++)
-            {
-                for (int j = 0; j <= Grid_Count_all_Y; j++)
-                {
-                    GridRealLoc[i, j] = agisControl.GetGridInterpolationValue(tempGridAxisX[i], tempGridAxisY[j]);
-                }
-            }
+            for (int j = 0; j <= Grid_Count_all_Y; j++)
+                GridRealLoc[i, j] = agisControl.GetGridInterpolationValue(tempGridAxisX[i], tempGridAxisY[j]);
             this.GridValueMatrix = GridRealLoc;
             return GridRealLoc;
         }
@@ -630,10 +538,8 @@ namespace AGIS_work
             for (int i = 0; i < Grid_Count_all_X; i++)
             {
                 for (int j = 0; j <= Grid_Count_all_Y; j++)
-                {
-                    double r = (elev - GridValueMatrix[i, j]) / (GridValueMatrix[i + 1, j] - GridValueMatrix[i, j]);
-                    tempHH[i, j] = (r <= 1 && r >= 0) ? r : 3;
-                }
+                {double r = (elev - GridValueMatrix[i, j]) / (GridValueMatrix[i + 1, j] - GridValueMatrix[i, j]);
+                    tempHH[i, j] = (r <= 1 && r >= 0) ? r : 3;}
             }
             this.HH = tempHH;
             return tempHH;
@@ -647,19 +553,14 @@ namespace AGIS_work
             for (int i = 0; i <= Grid_Count_all_X; i++)
             {
                 for (int j = 0; j < Grid_Count_all_Y; j++)
-                {
-                    double r = (elev - GridValueMatrix[i, j]) / (GridValueMatrix[i, j + 1] - GridValueMatrix[i, j]);
-                    tempSS[i, j] = (r <= 1 && r >= 0) ? r : 3;
-                }
+                {double r = (elev - GridValueMatrix[i, j]) / (GridValueMatrix[i, j + 1] - GridValueMatrix[i, j]);
+                    tempSS[i, j] = (r <= 1 && r >= 0) ? r : 3;}
             }
             this.SS = tempSS;
             return tempSS;
         }
 
-        private void 设置ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
+        private void 设置ToolStripMenuItem_Click(object sender, EventArgs e){}
 
         private void 逐点插入法ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -671,7 +572,7 @@ namespace AGIS_work
                 this.ShowTin = true;
                 this.显示隐藏TINToolStripMenuItem.Checked = true;
                 CreateTIN createTin = new CreateTIN(this.mPointSet);
-                Edge[] tinEdges = createTin.EdgeExtension();
+                Edge[] tinEdges = createTin.PointByPointInsertion2();
                 Edge[] tinEdges2 = createTin.GeneTIN().ToArray();
                 TinEdges = tinEdges;
                 TriangleSet triSet = EdgeSet.TopologyGenerateTriangleSet(tinEdges, mPointSet);
@@ -698,7 +599,7 @@ namespace AGIS_work
             {
                 //生成Tin
                 CreateTIN createTin = new CreateTIN(this.mPointSet);
-                Edge[] tinEdges = createTin.EdgeExtension();
+                Edge[] tinEdges = createTin.PointByPointInsertion2();
                 TinEdges = tinEdges;
                 TriangleSet triSet = EdgeSet.TopologyGenerateTriangleSet(tinEdges, mPointSet);
                 Triangle[] triList = triSet.TriangleList.ToArray();
@@ -708,11 +609,9 @@ namespace AGIS_work
                 for (int i = 0; i <= lineCount; i++)
                 {
                     for (int j = 0; j < triList.Length; j++)
-                    {
-                        Edge contourLine = triList[j].GetContourLine(settingForm.MaxValue - i * settingForm.IntervalValue);
+                    {Edge contourLine = triList[j].GetContourLine(settingForm.MaxValue - i * settingForm.IntervalValue);
                         if (contourLine != null)
-                            contourLinesList.Add(contourLine);
-                    }
+                            contourLinesList.Add(contourLine);}
                     this.TinContourLineList = contourLinesList.ToArray();
                 }
             }
@@ -720,10 +619,7 @@ namespace AGIS_work
             agisControl.Refresh();
         }
 
-        private void 设置ToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-
-        }
+        private void 设置ToolStripMenuItem1_Click(object sender, EventArgs e){}
 
         private void 生成拓扑关系ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -737,11 +633,7 @@ namespace AGIS_work
                 this.mTopoPolygonSet.Recheck(this.agisControl.GetRegionArea());
                 MessageBox.Show("拓扑关系生成成功！", "生成拓扑关系");
             }
-            catch(Exception err)
-            {
-
-                MessageBox.Show(err.Message, "错误！");
-            }
+            catch (Exception err){MessageBox.Show(err.Message, "错误！");}
             return;
         }
 
@@ -756,22 +648,15 @@ namespace AGIS_work
 
         private void 查询ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //this.查询ToolStripMenuItem.Checked = (this.查询ToolStripMenuItem.Checked == false);
             QueryPolygonInfoForm queryForm = new QueryPolygonInfoForm(this.mTopoPolygonSet);
-            if (queryForm.ShowDialog(this) == DialogResult.OK)
-            {
-
-            }
+            if (queryForm.ShowDialog(this) == DialogResult.OK) {}
         }
 
         private void 导出拓扑关系表ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveTopologyTableForm saveForm =
                 new SaveTopologyTableForm(this.mTopoPointSet, this.mTopoPolylineSet, this.mTopoPolygonSet);
-            if (saveForm.ShowDialog(this) == DialogResult.OK)
-            {
-
-            }
+            if (saveForm.ShowDialog(this) == DialogResult.OK){}
         }
 
         private void 程序信息ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -798,7 +683,7 @@ namespace AGIS_work
 (6)等值线  
     等值线的最大值，最小值，间距由对话框设定。
     “格网模型” —— “生成等值线”，根据格网模型生成等值线。
-    “格网模型” —— “生成等值线” ———— “平滑”，是否平滑生成的等值线。
+    “格网模型” —— “生成等值线” —— “平滑”，是否平滑生成的等值线。
     “TIN模型” —— “生成等值线”，根据TIN模型生成等值线。
 (7)拓扑关系
     “拓扑关系” —— “生成拓扑关系”，根据由网格生成的等值线，构建要求的拓扑关系
@@ -815,15 +700,11 @@ namespace AGIS_work
         }
 
         private void agisControl_MouseHover(object sender, EventArgs e)
-        {
-
-        }
+        {}
 
         private void 显示隐藏格网ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.IsGridVisible = (显示隐藏格网ToolStripMenuItem.Checked == true);
-            agisControl.Refresh();
-        }
+        {this.IsGridVisible = (显示隐藏格网ToolStripMenuItem.Checked == true);
+            agisControl.Refresh();}
 
         private void 生成格网ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -841,15 +722,9 @@ namespace AGIS_work
         }
 
         private void agisControl_MouseClick(object sender, MouseEventArgs e)
-        {
-            MouseLocation = e.Location;
-        }
+        {MouseLocation = e.Location;}
 
-        private void agisControl_MouseDown(object sender, MouseEventArgs e)
-        {
-            //MouseLocation = e.Location;
-            //this.agisControl.Refresh();
-        }
+        private void agisControl_MouseDown(object sender, MouseEventArgs e){}
 
         private void agisControl_MouseDoubleClick(object sender, MouseEventArgs e)
         {
@@ -865,16 +740,12 @@ namespace AGIS_work
                 SelectPointX = SelectPointY = -1;
                 int gridScreen_AxisX_count = GridScreen_AxisX.Count;
                 for (int i = 0; i < gridScreen_AxisX_count; i++)
-                {
-                    if (Math.Abs(GridScreen_AxisX[i] - this.MouseLocation.X) < this.SelectPixelThreshold)
-                        SelectPointX = this.agisControl.GetRealWorldLocX((float)GridScreen_AxisX[i]);
-                }
+                {if (Math.Abs(GridScreen_AxisX[i] - this.MouseLocation.X) < this.SelectPixelThreshold)
+                        SelectPointX = this.agisControl.GetRealWorldLocX((float)GridScreen_AxisX[i]);}
                 int gridScreen_AxisY_count = GridScreen_AxisY.Count;
                 for (int i = 0; i < gridScreen_AxisY_count; i++)
-                {
-                    if (Math.Abs(GridScreen_AxisY[i] - this.MouseLocation.Y) < this.SelectPixelThreshold)
-                        SelectPointY = this.agisControl.GetRealWorldLocY((float)GridScreen_AxisY[i]);
-                }
+                { if (Math.Abs(GridScreen_AxisY[i] - this.MouseLocation.Y) < this.SelectPixelThreshold)
+                        SelectPointY = this.agisControl.GetRealWorldLocY((float)GridScreen_AxisY[i]);}
                 //选中了格网点
                 if (SelectPointX != -1 && SelectPointY != -1 && agisControl.GridIntMethod != Mehtod.GridInterpolationMehtod.None)
                 {
@@ -882,25 +753,15 @@ namespace AGIS_work
                     string MethodName = "";
                     string Para = "";
                     if (agisControl.GridIntMethod == Mehtod.GridInterpolationMehtod.按方位加权平均法)
-                    {
-                        if (agisControl.按方位加权平均法SectorNum < 0)
-                        {
-                            MessageBox.Show("按方位加权平均法 参数尚未设置", "错误");
-                            return;
-                        }
+                    {if (agisControl.按方位加权平均法SectorNum < 0)
+                        { MessageBox.Show("按方位加权平均法 参数尚未设置", "错误"); return; }
                         MethodName = "按方位加权平均法";
-                        Para = string.Format("{0}:{1}", "每个象限等分扇区数N0", agisControl.按方位加权平均法SectorNum / 4);
-                    }
+                        Para = string.Format("{0}:{1}", "每个象限等分扇区数N0", agisControl.按方位加权平均法SectorNum / 4);}
                     else if (agisControl.GridIntMethod == Mehtod.GridInterpolationMehtod.距离平方倒数法)
-                    {
-                        if (agisControl.距离平方倒数法NearPts < 0)
-                        {
-                            MessageBox.Show("距离平方倒数法 参数尚未设置", "错误");
-                            return;
-                        }
+                    {if (agisControl.距离平方倒数法NearPts < 0)
+                        { MessageBox.Show("距离平方倒数法 参数尚未设置", "错误"); return; }
                         MethodName = "距离平方倒数法";
-                        Para = string.Format("{0}:{1}", "选取距插值点最近的N个点", agisControl.距离平方倒数法NearPts);
-                    }
+                        Para = string.Format("{0}:{1}", "选取距插值点最近的N个点", agisControl.距离平方倒数法NearPts);}
                     MessageBox.Show(string.Format("{0}\t\r\nX:{1}\t\nY:{2}\t\r\nValue:{3}\r\n\r\n{4}\r\n{5}",
                         "格网点属性信息：", SelectPointX.ToString("0.00"), SelectPointY.ToString("0.00"),
                         agisControl.GetGridInterpolationValue(SelectPointX, SelectPointY).ToString("0.000"),
@@ -921,10 +782,7 @@ namespace AGIS_work
             }
         }
 
-        private void agisControl_Load(object sender, EventArgs e)
-        {
-
-        }
+        private void agisControl_Load(object sender, EventArgs e) { }
 
         private void 显示隐藏TINToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -933,9 +791,7 @@ namespace AGIS_work
         }
 
         private void 生成等值线ToolStripMenuItem1_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
+        { }
 
         private void Set等值线可见性(bool isVisable)
         {
@@ -963,7 +819,6 @@ namespace AGIS_work
             DataPoint rectP7 = new DataPoint(-10007, "Rect7", LeftX, CenterY, this.agisControl.GetGridInterpolationValue(LeftX, CenterY));
             DataPoint rectP8 = new DataPoint(-10008, "Rect8", LeftX, TopY, this.agisControl.GetGridInterpolationValue(LeftX, TopY));
             //给定的边
-
             List<Edge> GivenEdges = new List<Edge>();
             //矩形边缘
             GivenEdges.Add(new Edge(rectP1, rectP2));
@@ -998,8 +853,6 @@ namespace AGIS_work
             }
             this.mSubPolyline = resultPolylineList;
             this.mSubEdge = resultEdgeList;
-
-
             return;
         }
 
@@ -1017,43 +870,25 @@ namespace AGIS_work
         }
 
         private void 拓扑点ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            拓扑点ToolStripMenuItem.Checked = (拓扑点ToolStripMenuItem.Checked == false);
-        }
+        { 拓扑点ToolStripMenuItem.Checked = (拓扑点ToolStripMenuItem.Checked == false); }
 
         private void 拓扑边ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            拓扑边ToolStripMenuItem.Checked = (拓扑边ToolStripMenuItem.Checked == false);
-        }
+        { 拓扑边ToolStripMenuItem.Checked = (拓扑边ToolStripMenuItem.Checked == false); }
 
         private void 拓扑多边形ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            拓扑多边形ToolStripMenuItem.Checked = (拓扑多边形ToolStripMenuItem.Checked == false);
-        }
-
+        { 拓扑多边形ToolStripMenuItem.Checked = (拓扑多边形ToolStripMenuItem.Checked == false); }
 
         private void 拓扑点ToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
-        {
-            this.ShowTopoPoint = 拓扑点ToolStripMenuItem.Checked;
-            this.Refresh();
-        }
+        { this.ShowTopoPoint = 拓扑点ToolStripMenuItem.Checked; this.Refresh(); }
 
         private void 拓扑边ToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
-        {
-            this.ShowTopoPolyline = 拓扑边ToolStripMenuItem.Checked;
-            this.Refresh();
-        }
+        { this.ShowTopoPolyline = 拓扑边ToolStripMenuItem.Checked; this.Refresh(); }
 
         private void 拓扑多边形ToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
-        {
-            this.ShowTopoPolygon = 拓扑多边形ToolStripMenuItem.Checked;
-            this.Refresh();
-        }
+        { this.ShowTopoPolygon = 拓扑多边形ToolStripMenuItem.Checked; this.Refresh(); }
 
         private void 查询ToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
-        {
-            this.IsQueryTopoPolygon = 查询ToolStripMenuItem.Checked;
-        }
+        { this.IsQueryTopoPolygon = 查询ToolStripMenuItem.Checked; }
 
         private void 作者信息ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1078,8 +913,9 @@ namespace AGIS_work
         }
 
         private void 清楚TINToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.ShowTin = false;
-        }
+        { this.ShowTin = false; }
+
+        private void 平滑ToolStripMenuItem_Click(object sender, EventArgs e)
+        { this.ContourLineUseSpline = (平滑ToolStripMenuItem.Checked == true); }
     }
 }

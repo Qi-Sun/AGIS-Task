@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace AGIS_work.DataStructure
 {
+    /// <summary>
+    /// 最小外包矩形类
+    /// </summary>
     public class MinBoundRect
     {
         public double MinX { get; private set; }

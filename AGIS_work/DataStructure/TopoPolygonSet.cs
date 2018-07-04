@@ -7,14 +7,13 @@ using System.Threading.Tasks;
 
 namespace AGIS_work.DataStructure
 {
+    //拓扑多边形集合
     public class TopoPolygonSet
     {
         public List<TopoPolygon> TopoPolygonList { get; private set; }
 
         public TopoPolygonSet()
-        {
-            this.TopoPolygonList = new List<TopoPolygon>();
-        }
+        { this.TopoPolygonList = new List<TopoPolygon>(); }
         public TopoPolygonSet(TopoPolygon[] gons)
         {
             this.TopoPolygonList = new List<TopoPolygon>();
@@ -24,6 +23,7 @@ namespace AGIS_work.DataStructure
                     TopoPolygonList.Add(gons[i]);
             }
         }
+        //二次筛查
         public void Recheck(double regionArea)
         {
             double area_max = 0;
@@ -32,36 +32,26 @@ namespace AGIS_work.DataStructure
             {
                 double area = TopoPolygonList[i].GetArea();
                 if (area > area_max)
-                {
-                    area_max = area;
-                    pid_max_index = i;
-                }
+                { area_max = area; pid_max_index = i; }
             }
             if (pid_max_index != -1 && area_max > 0.5 * regionArea)
                 TopoPolygonList.RemoveAt(pid_max_index);
         }
-
+        //判断是否存在对应id的多边形
         public bool IsPolygonExist(int pid)
         {
             foreach (var polygon in TopoPolygonList)
-            {
-                if (polygon.PID == pid)
-                    return true;
-            }
+            { if (polygon.PID == pid) return true; }
             return false;
         }
-
-
+        //获取选中的多边形
         public TopoPolygon GetClickPointInsidePolygon(TopoPoint clickPoint)
         {
             foreach (var polygon in this.TopoPolygonList)
-            {
-                if (polygon.IfPointInRegion(clickPoint))
-                    return polygon;
-            }
-            return null; 
+            { if (polygon.IfPointInRegion(clickPoint)) return polygon; }
+            return null;
         }
-
+        //导出多边形拓扑关系表至文件
         public void SavePolygonTableToFile(string filename)
         {
             StreamWriter sw = new StreamWriter(filename);
@@ -69,11 +59,9 @@ namespace AGIS_work.DataStructure
                     "ID", "Pol_ID", "Arc_Num", "ArcIds", "OuterPol_ID", "InnerPol_ID", "LX", "LY", "RX", "RY"));
             foreach (var polygon in TopoPolygonList)
             {
-                string arcids = " "; 
+                string arcids = " ";
                 foreach (var arc in polygon.TopologyArcs)
-                {
-                    arcids += arc.ArcID + ",";
-                }
+                { arcids += arc.ArcID + ","; }
                 sw.WriteLine(string.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}",
                     polygon.innerId, polygon.PID, polygon.TopologyArcs.Count, arcids.Remove(arcids.Length - 1),
                     (polygon.OuterPolygon == null) ? "NULL" : polygon.OuterPolygon.PID.ToString(),
@@ -82,6 +70,5 @@ namespace AGIS_work.DataStructure
             }
             sw.Close();
         }
-        
     }
 }

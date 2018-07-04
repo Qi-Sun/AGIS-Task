@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace AGIS_work.DataStructure
 {
+    //三角形集合
     public class TriangleSet
     {
         public List<Triangle> TriangleList = new List<Triangle>();
@@ -19,35 +20,24 @@ namespace AGIS_work.DataStructure
         {
             int index = 0;
             foreach (var tri in TriangleList)
-            {
-                if (tri.TID == tid)
-                    break;
-                index++;
-            }
+            { if (tri.TID == tid) break; index++; }
             TriangleList.RemoveAt(index);
         }
-
+        //添加一个三角形
         public void AddTriangle(Triangle t)
-        {
-            TriangleList.Add(t);
-        }
-
+        { TriangleList.Add(t); }
+        //求点所在三角形
         public Triangle GetPointInsidesTri(DataPoint p)
         {
             foreach (var tri in TriangleList)
-            {
-                if (tri.IsPointInTriangle(p))
-                    return tri;
-            }
+            { if (tri.IsPointInTriangle(p)) return tri; }
             return null;
         }
-        public bool IsTriAlreadyExists(int oid1,int oid2,int oid3)
+        //判断是否已经存在
+        public bool IsTriAlreadyExists(int oid1, int oid2, int oid3)
         {
             foreach (var tri in TriangleList)
-            {
-                if (tri.IsEqulesTri(oid1,oid2,oid3))
-                    return true;
-            }
+            { if (tri.IsEqulesTri(oid1, oid2, oid3)) return true; }
             return false;
         }
     }

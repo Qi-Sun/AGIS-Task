@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace AGIS_work.DataStructure
 {
+    //线段集合
     public class EdgeSet
     {
         public List<Edge> EdgeList = new List<Edge>();
@@ -20,18 +21,12 @@ namespace AGIS_work.DataStructure
         {
             int index = 0;
             foreach (var edge in EdgeList)
-            {
-                if (edge.EID == eid)
-                    break;
-                index++;
-            }
+            { if (edge.EID == eid) break; index++; }
             EdgeList.RemoveAt(index);
         }
 
         public void AddEdge(Edge e)
-        {
-            EdgeList.Add(e);
-        }
+        { EdgeList.Add(e); }
 
         public Edge GetEdgeByOID(int oid1, int oid2)
         {
@@ -53,7 +48,7 @@ namespace AGIS_work.DataStructure
             return null;
         }
 
-
+        //由线段和点集生成三角形集合
         public static TriangleSet TopologyGenerateTriangleSet(Edge[] Edges, PointSet PointSet)
         {
             TriangleSet triangleSet = new TriangleSet();
@@ -88,6 +83,7 @@ namespace AGIS_work.DataStructure
             return triangleSet;
         }
 
+        //由线段集合生成等值线集合
         public static ContourPolylineSet TopologyGenerateContourPolylineSet(Edge[] Edges)
         {
             List<ContourPolyline> ContourPolylineList = new List<ContourPolyline>();
@@ -144,7 +140,7 @@ namespace AGIS_work.DataStructure
                     if (startEdge != null)
                     {
                         int startOID = (startEdge.StartOID == startPointOID) ? startEdge.EndOID : startEdge.StartOID;
-                        tempPointList.Insert(0,ContourPointSet.GetPointByOID(startOID));
+                        tempPointList.Insert(0, ContourPointSet.GetPointByOID(startOID));
                         ContourEdgeSet.EdgeList.Remove(startEdge);
                     }
                     else break;

@@ -13,6 +13,7 @@ using AGIS_work.Mehtod;
 
 namespace AGIS_work
 {
+    //用户操作类型
     public enum UserOperationType
     {
         None = 0,
@@ -24,7 +25,7 @@ namespace AGIS_work
         GenerateTopology
 
     }
-
+    //用户操作控件
     public partial class AgisControl : UserControl
     {
         public AgisControl()
@@ -34,8 +35,6 @@ namespace AGIS_work
             CenterPoint = new PointF(0, 0);
             this.MouseWheel += this.AgisControl_MouseWheel;
         }
-
-        
 
         public PointSet PointSet { get; private set; }
         public UserOperationType UserOperation { get; private set; }
@@ -81,38 +80,15 @@ namespace AGIS_work
                 UserOperation = UserOperationType.DisplayThePointSet;
                 return true;
             }
-            catch
-            {
-                return false;
-            }
+            catch {return false;}
         }
 
-        private void AgisControl_Load(object sender, EventArgs e)
-        {
+        private void AgisControl_Load(object sender, EventArgs e){}
 
-        }
-
-        private void AgisControl_Paint(object sender, PaintEventArgs e)
-        {/*
-            try
-            {
-                Graphics g = e.Graphics;
-                foreach (DataPoint point in PointSet.PointList)
-                {                   
-                    g.FillRectangle(PointBrush, (float)((point.X - this.OffsetX) * this.Zoom - PointRadius),
-                        (float)(this.Height - ((point.Y - this.OffsetY) * this.Zoom - PointRadius)),
-                        (float)(PointRadius * 2), (float)(PointRadius * 2));
-                    //MessageBox.Show(string.Format("[0} {1}", (float)((point.X - this.MBR.MinX) * this.Scale),
-                    //    this.Height - (float)((point.Y - this.MBR.MinY) * this.Scale)));
-                }
-            }
-            catch { }*/
-        }
+        private void AgisControl_Paint(object sender, PaintEventArgs e){}
 
         public void SetUserOperationToDisplayInGrid()
-        {
-            this.UserOperation = UserOperationType.DisplayInGrid;
-        }
+        {this.UserOperation = UserOperationType.DisplayInGrid;}
 
         /// <summary>
         /// 获取实际坐标点在屏幕上的位置
@@ -121,10 +97,8 @@ namespace AGIS_work
         /// <param name="y"></param>
         /// <returns></returns>
         public PointF GetScreenLocation(double x,double y)
-        {
-            return new PointF((float)((x - this.OffsetX) * this.Zoom),
-                (float)(this.Height - ((y - this.OffsetY) * this.Zoom)));
-        }
+        {return new PointF((float)((x - this.OffsetX) * this.Zoom),
+                (float)(this.Height - ((y - this.OffsetY) * this.Zoom)));}
 
         /// <summary>
         /// 单独获取实际坐标点X轴在屏幕上的位置
@@ -132,18 +106,14 @@ namespace AGIS_work
         /// <param name="x"></param>
         /// <returns></returns>
         public double GetScreenLocX(double x)
-        {
-            return (x - this.OffsetX) * this.Zoom;
-        }
+        {return (x - this.OffsetX) * this.Zoom;}
         /// <summary>
         /// 单独获取实际坐标点Y轴在屏幕上的位置
         /// </summary>
         /// <param name="y"></param>
         /// <returns></returns>
         public double GetScreenLocY(double y)
-        {
-            return (this.Height - ((y - this.OffsetY) * this.Zoom));
-        }
+        {return (this.Height - ((y - this.OffsetY) * this.Zoom));}
 
         /// <summary>
         /// 获取实际边在屏幕上的投影
@@ -166,9 +136,7 @@ namespace AGIS_work
         {
             List<PointF> tempPointList = new List<PointF>();
             foreach (var point in polyline.PointList)
-            {
-                tempPointList.Add(new PointF((float)GetScreenLocX(point.X), (float)GetScreenLocY(point.Y)));
-            }
+            {tempPointList.Add(new PointF((float)GetScreenLocX(point.X), (float)GetScreenLocY(point.Y)));}
             return tempPointList.ToArray();
         }
 
@@ -182,10 +150,8 @@ namespace AGIS_work
         {
             List<PointF> result = new List<PointF>();
             foreach (var point in points)
-            {
-                result.Add(new PointF((float)((point.X - this.OffsetX) * this.Zoom),
-                (float)(this.Height - ((point.Y - this.OffsetY) * this.Zoom))));
-            }
+            {result.Add(new PointF((float)((point.X - this.OffsetX) * this.Zoom),
+                (float)(this.Height - ((point.Y - this.OffsetY) * this.Zoom))));}
             return result.ToArray();
         }
 
@@ -202,10 +168,8 @@ namespace AGIS_work
         }
 
         public double GetRegionArea()
-        {
-            return (this.MBR_Origin.MaxX - this.MBR_Origin.MinX) * 
-                (this.MBR_Origin.MaxY - this.MBR_Origin.MinY);
-        }
+        { return (this.MBR_Origin.MaxX - this.MBR_Origin.MinX) * 
+                (this.MBR_Origin.MaxY - this.MBR_Origin.MinY);}
 
         /// <summary>
         /// 获取屏幕点的实际位置。
@@ -214,37 +178,17 @@ namespace AGIS_work
         /// <param name="y"></param>
         /// <returns></returns>
         public double[] GetRealWorldLocation(float x , float y)
-        {
-            return new double[] { (x / this.Zoom + this.OffsetX),
-                ((this.Height - y) / this.Zoom + this.OffsetY) };
-           
-        }
+        { return new double[] { (x / this.Zoom + this.OffsetX),
+                ((this.Height - y) / this.Zoom + this.OffsetY) };}
 
         public double GetRealWorldLocX(float x)
-        {
-            return x / this.Zoom + this.OffsetX;
-        }
+        {return x / this.Zoom + this.OffsetX; }
 
         public double GetRealWorldLocY(float y)
-        {
-            return (this.Height - y) / this.Zoom + this.OffsetY;
-        }
+        {return (this.Height - y) / this.Zoom + this.OffsetY;}
 
         private void AgisControl_Resize(object sender, EventArgs e)
-        {
-            try
-            {
-                /*
-                this.Scale = Math.Min(this.Width / (PointSet.MBR.MaxX - PointSet.MBR.MinX),
-                    this.Height / (PointSet.MBR.MaxY - PointSet.MBR.MinY)) / this.FrameScaling;
-                this.Refresh();*/
-            }
-            catch
-            {
-
-            }
-            this.Refresh(); 
-        }
+        {this.Refresh(); }
 
         private void AgisControl_MouseClick(object sender, MouseEventArgs e)
         {
@@ -293,16 +237,12 @@ namespace AGIS_work
         }
 
         private void AgisControl_MouseDown(object sender, MouseEventArgs e)
-        {
-            this.IsPanning = true;
-            this.CurMouseLocation = e.Location;
-        }
+        {this.IsPanning = true;
+            this.CurMouseLocation = e.Location;}
 
         private void AgisControl_MouseUp(object sender, MouseEventArgs e)
-        {
-            this.IsPanning = false;
-            this.CurMouseLocation = e.Location;
-        }
+        {this.IsPanning = false;
+            this.CurMouseLocation = e.Location; }
 
         public double GetGridInterpolationValue(double x,double y)
         {

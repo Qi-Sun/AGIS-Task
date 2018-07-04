@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace AGIS_work.DataStructure
 {
+    /// <summary>
+    /// 等值线集合
+    /// </summary>
     public class ContourPolylineSet
     {
         public List<ContourPolyline> ContourPolylineList = new List<ContourPolyline>();

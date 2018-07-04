@@ -7,16 +7,19 @@ using System.IO;
 
 namespace AGIS_work.DataStructure
 {
+    /// <summary>
+    /// 数据点集合
+    /// </summary>
     public class PointSet
     {
         public string SetName { get; private set; }
-        public string FileName { get; private set; }       
+        public string FileName { get; private set; }
 
         public List<DataPoint> PointList { get; private set; }
         public MinBoundRect MBR { get; private set; }
 
         public PointSet() { MBR = new MinBoundRect(-1, -1, 1, 1); PointList = new List<DataPoint>(); }
-        public PointSet(string setname,string filename, DataPoint[] points)
+        public PointSet(string setname, string filename, DataPoint[] points)
         {
             this.SetName = setname;
             this.FileName = filename;
@@ -41,7 +44,7 @@ namespace AGIS_work.DataStructure
             {
                 string setName = sr.ReadLine();
                 int oid = 0;
-                while (! sr.EndOfStream)
+                while (!sr.EndOfStream)
                 {
                     string onePoint = sr.ReadLine();
                     string[] pointInfo = onePoint.Split(',');
@@ -51,10 +54,7 @@ namespace AGIS_work.DataStructure
                 }
                 pointSet = new PointSet(setName, filename, dataPoints.ToArray());
             }
-            catch(Exception err)
-            {
-                throw err;
-            }
+            catch (Exception err) { throw err; }
             sr.Close();
             return pointSet;
         }
@@ -72,17 +72,17 @@ namespace AGIS_work.DataStructure
                 sw.WriteLine(this.SetName);
                 foreach (DataPoint point in this.PointList)
                 {
-                    sw.WriteLine(string.Format("{0},{1},{2],{3},{4}",point.ID,point.Name,point.X,point.Y,point.Value));
+                    sw.WriteLine(string.Format("{0},{1},{2],{3},{4}", point.ID, point.Name, point.X, point.Y, point.Value));
                 }
 
             }
-            catch(Exception err)
+            catch (Exception err)
             {
                 throw err;
             }
             sw.Close();
             return;
-        }    
+        }
 
         /// <summary>
         /// 根据OID返回数据点
@@ -92,10 +92,7 @@ namespace AGIS_work.DataStructure
         public DataPoint GetPointByOID(int oid)
         {
             foreach (var point in PointList)
-            {
-                if (point.OID == oid)
-                    return point;
-            }
+            { if (point.OID == oid) return point; }
             return null;
         }
 
@@ -107,10 +104,7 @@ namespace AGIS_work.DataStructure
         public bool AddPoint(DataPoint point)
         {
             if (GetPointByOID(point.OID) == null)
-            {
-                PointList.Add(point);
-                return true;
-            }
+            { PointList.Add(point); return true; }
             else return false;
         }
 
@@ -122,9 +116,7 @@ namespace AGIS_work.DataStructure
         {
             List<int> OIDList = new List<int>();
             foreach (var point in PointList)
-            {
                 OIDList.Add(point.OID);
-            }
             return OIDList;
         }
     }

@@ -96,8 +96,6 @@
     <Compile Include="DataStructure\EdgeSet.cs" />
     <Compile Include="DataStructure\MBR.cs" />
     <Compile Include="DataStructure\PointSet.cs" />
-    <Compile Include="DataStructure\TIN.cs" />
-    <Compile Include="DataStructure\TinLine.cs" />
     <Compile Include="DataStructure\TopoPoint.cs" />
     <Compile Include="DataStructure\TopoPointSet.cs" />
     <Compile Include="DataStructure\TopoPolygon.cs" />

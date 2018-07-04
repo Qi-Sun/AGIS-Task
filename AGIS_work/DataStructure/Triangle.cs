@@ -6,21 +6,22 @@ using System.Threading.Tasks;
 
 namespace AGIS_work.DataStructure
 {
+    //三角形
     public class Triangle
     {
-        public int TID { get; private set; }
-        public DataPoint VertexA { get; private set; }
-        public DataPoint VertexB { get; private set; }
-        public DataPoint VertexC { get; private set; }
+        public int TID { get; private set; }//标识码
+        public DataPoint VertexA { get; private set; }//A顶点
+        public DataPoint VertexB { get; private set; }//B定点
+        public DataPoint VertexC { get; private set; }//C顶点
 
-        public Triangle(DataPoint v0,DataPoint v1,DataPoint v2,int tid)
+        public Triangle(DataPoint v0, DataPoint v1, DataPoint v2, int tid)
         {
             this.VertexA = v0;
             this.VertexB = v1;
             this.VertexC = v2;
             this.TID = tid;
         }
-
+        //判断点是否在三角形内
         public bool IsPointInTriangle(DataPoint p)
         {
             Vector2D vectorPA = VertexA - p;
@@ -31,8 +32,8 @@ namespace AGIS_work.DataStructure
             double vPcPa = vectorPC.CrossProduct(vectorPA);
             return (vPaPb > 0 && vPbPc > 0 && vPcPa > 0) || (vPaPb < 0 && vPbPc < 0 && vPcPa < 0);
         }
-
-        public bool IsEqulesTri(int oid1,int oid2,int oid3)
+        //判断是否全等
+        public bool IsEqulesTri(int oid1, int oid2, int oid3)
         {
             List<int> TriOIDList = new List<int>();
             TriOIDList.Add(VertexA.OID);
@@ -44,17 +45,17 @@ namespace AGIS_work.DataStructure
             VirOIDList.Add(oid2);
             VirOIDList.Add(oid3);
             VirOIDList.Sort();
-            return (TriOIDList[0] == VirOIDList[0]) && 
-                (TriOIDList[1] == VirOIDList[1]) && 
+            return (TriOIDList[0] == VirOIDList[0]) &&
+                (TriOIDList[1] == VirOIDList[1]) &&
                 (TriOIDList[2] == VirOIDList[2]);
         }
-
+        //获取三角形内等值线
         public Edge GetContourLine(double elevation)
         {
             List<DataPoint> points = new List<DataPoint>();
             if ((elevation - VertexA.Value) * (elevation - VertexB.Value) * (elevation - VertexC.Value) == 0)
                 elevation += 0.1;
-            if ((elevation - VertexA.Value)*(elevation - VertexB.Value) < 0)          
+            if ((elevation - VertexA.Value) * (elevation - VertexB.Value) < 0)
             {
                 double EleX = VertexA.X + (VertexB.X - VertexA.X) * (elevation - VertexA.Value) / (VertexB.Value - VertexA.Value);
                 double EleY = VertexA.Y + (VertexB.Y - VertexA.Y) * (elevation - VertexA.Value) / (VertexB.Value - VertexA.Value);
@@ -82,9 +83,7 @@ namespace AGIS_work.DataStructure
                 points.Add(p1);
             }
             if (points.Count == 2)
-            {
-                return new Edge(points[0], points[1]);
-            }
+            { return new Edge(points[0], points[1]); }
             else return null;
         }
     }

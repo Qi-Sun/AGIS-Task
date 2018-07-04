@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace AGIS_work.DataStructure
 {
+    //拓扑点点集
     public class TopoPointSet
     {
         /// <summary>
@@ -70,10 +71,7 @@ namespace AGIS_work.DataStructure
         public TopoPoint GetNodeByPointID(int poid)
         {
             foreach (var point in TopoNodeList)
-            {
-                if (point.PointID == poid)
-                    return point;
-            }
+            { if (point.PointID == poid) return point; }
             return null;
         }
 
@@ -116,7 +114,7 @@ namespace AGIS_work.DataStructure
             List<TopoPolygon> polygonList = new List<TopoPolygon>();
             foreach (var tpPoint in this.TopoNodeList)
             {
-                List<Tuple<TopoPoint, double, double, int, TopoPolyline>> curPointStructList = 
+                List<Tuple<TopoPoint, double, double, int, TopoPolyline>> curPointStructList =
                     new List<Tuple<TopoPoint, double, double, int, TopoPolyline>>();
                 List<TopoPolyline> relaArcs = tpPoint.TopologyArcs;
                 foreach (var arc in relaArcs)
@@ -170,13 +168,11 @@ namespace AGIS_work.DataStructure
                         directList = new List<int>();
                     }
                 }
-                           
+
             }
             return new TopoPolygonSet(polygonList.ToArray());
         }
-
-        
-
+        //对搜索边进行排序
         public void SortTheSearchLine(List<Tuple<TopoPoint, double, double, int, TopoPolyline>> lineToSort, double startAngle)
         {
             lineToSort.Sort((x, y) =>
@@ -189,7 +185,7 @@ namespace AGIS_work.DataStructure
             });
             return;
         }
-
+        //根据点标识获取点
         public TopoPoint GetTopoPointByID(int poid)
         {
             foreach (var point in this.TopoPointList)
@@ -205,7 +201,7 @@ namespace AGIS_work.DataStructure
         /// </summary>
         /// <param name="curNode">TopoPoint当前搜索点，double前一步的排序条件，double当前的步的排序条件，int方向，Polyline当前弧段</param>
         /// <returns></returns>
-        public Tuple<TopoPoint, double, double, int,TopoPolyline> GetNextNode(Tuple<TopoPoint, double, double, int, TopoPolyline> curNode)
+        public Tuple<TopoPoint, double, double, int, TopoPolyline> GetNextNode(Tuple<TopoPoint, double, double, int, TopoPolyline> curNode)
         {
             List<TopoPolyline> curArcs = this.GetNodeByPointID(curNode.Item1.PointID).TopologyArcs;
             List<Tuple<TopoPoint, double, double, int, TopoPolyline>> tempList = new List<Tuple<TopoPoint, double, double, int, TopoPolyline>>();
@@ -233,7 +229,7 @@ namespace AGIS_work.DataStructure
             SortTheSearchLine(tempList, curNode.Item3);
             return tempList[0];
         }
-
+        //导出结点关系表至文件
         public void SaveNodeTableToFile(string filename)
         {
             StreamWriter sw = new StreamWriter(filename);
@@ -249,7 +245,7 @@ namespace AGIS_work.DataStructure
             }
             sw.Close();
         }
-
+        //导出中间点关系表至文件
         public void SavePointTableToFile(string filename)
         {
             StreamWriter sw = new StreamWriter(filename);

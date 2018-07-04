@@ -9,25 +9,26 @@ using System.Threading.Tasks;
 
 namespace AGIS_work.Mehtod
 {
+    //简化的三角形边
+    class TinLine
+    {
+        public DataPoint Begin { get; internal set; }
+        public DataPoint End { get; internal set; }
+    }
+    //构建TIN模型
     public class CreateTIN
     {
-        public PointSet mPointSet;
-
-
-        private PointF[] arrDots;
-        private ArrayList arrEdges = new ArrayList();
-        private ArrayList arrTris = new ArrayList();
+        public PointSet mPointSet;//点集
+        private PointF[] arrDots;//点序列
+        private ArrayList arrEdges = new ArrayList();//边序列
+        private ArrayList arrTris = new ArrayList();//三角形序列
 
         public CreateTIN(PointSet pointSet)
-        {
-            this.mPointSet = pointSet;
-        }
-        
+        { this.mPointSet = pointSet; }
+        //逐点插入法2
         public Edge[] PointByPointInsertion()
         {
             EdgeSet sEdgeSet = new EdgeSet();
-            //int curEID = 0;
-            //int curTID = 0;
             TriangleSet sTriangleSet = new TriangleSet();
             MinBoundRect sMBR = this.mPointSet.MBR;
             double width = sMBR.MaxX - sMBR.MinX;
@@ -45,16 +46,12 @@ namespace AGIS_work.Mehtod
             foreach (var point in mPointSet.PointList)
             {
                 Triangle CurTri = sTriangleSet.GetPointInsidesTri(point);
-                if (CurTri != null)
-                {
-
-                }
+                if (CurTri != null) { }
             }
             return sEdgeSet.EdgeList.ToArray();
         }
-
-
-        public Edge[] EdgeExtension()
+        //逐点插入法2
+        public Edge[] PointByPointInsertion2()
         {
             double ang;
             ArrayList tinlines = new ArrayList();
@@ -68,10 +65,7 @@ namespace AGIS_work.Mehtod
             {
                 dis = pointList[0].GetDistance(pointList[i]);
                 if (dis < mindis)
-                {
-                    mindis = dis;
-                    count = i;
-                }
+                { mindis = dis; count = i; }
             }
             //将第一条边反向已进行三角形扩展
             tl.Begin = (DataPoint)pointList[0];
@@ -100,14 +94,9 @@ namespace AGIS_work.Mehtod
                     {
                         //获取角度最大点
                         ang = DataPoint.Angle((DataPoint)pointList[i], ((TinLine)tinlines[j]).Begin, ((TinLine)tinlines[j]).End);
-                        if (ang > minang)
-                        {
-                            minang = ang;
-                            count = i;
-                        }
+                        if (ang > minang) { minang = ang; count = i; }
                         OK = true;
                     }
-
                 }
                 if (OK == true)
                 {
@@ -125,47 +114,28 @@ namespace AGIS_work.Mehtod
                         //判断新生成的两边是否与已生成的边重合
                         if ((tling2.Begin == ((TinLine)tinlines[i]).Begin && tling2.End == ((TinLine)tinlines[i]).End) ||
                             (tling2.Begin == ((TinLine)tinlines[i]).End && tling2.End == ((TinLine)tinlines[i]).Begin))
-                        {
-                            t2 = 1;
-                        }
+                        { t2 = 1; }
                         if ((tling1.Begin == ((TinLine)tinlines[i]).Begin && tling1.End == ((TinLine)tinlines[i]).End) ||
                             (tling1.Begin == ((TinLine)tinlines[i]).End && tling1.End == ((TinLine)tinlines[i]).Begin))
-                        {
-                            t1 = 1;
-
-                        }
+                        { t1 = 1; }
                     }
                     //两条边都重合
                     if (t2 == 1 && t1 == 1)
-                    {
-                        for (int i = 0; i < 2; i++)
-                        {
-                            tinlines.Remove(tinlines[tinlines.Count - 1]);
-                        }
-                    }
+                    { for (int i = 0; i < 2; i++) { tinlines.Remove(tinlines[tinlines.Count - 1]); } }
                     //第二条边重合
-                    else if (t2 == 1)
-                    {
-                        tinlines.Remove(tinlines[tinlines.Count - 1]);
-                    }
+                    else if (t2 == 1) { tinlines.Remove(tinlines[tinlines.Count - 1]); }
                     //第一条边重合
-                    else if (t1 == 1)
-                    {
-                        tinlines.Remove(tinlines[tinlines.Count - 2]);
-                    }
+                    else if (t1 == 1) { tinlines.Remove(tinlines[tinlines.Count - 2]); }
                 }
             }
             tinlines.Remove(tinlines[0]);//将集合中的第一条边删除    
             List<Edge> ResultEdge = new List<Edge>();
             int eid = 1;
             foreach (var tinLine in tinlines)
-            {
-                ResultEdge.Add(new Edge(((TinLine)tinLine).Begin, ((TinLine)tinLine).End));
-                eid++;
-            }
+            { ResultEdge.Add(new Edge(((TinLine)tinLine).Begin, ((TinLine)tinLine).End)); eid++; }
             return ResultEdge.ToArray();
         }
-
+        //简化的边类
         public class Edge2
         {
             public int Start;//边的起点 
@@ -173,6 +143,7 @@ namespace AGIS_work.Mehtod
             public int LeftTri = -1;//左三角形索引 
             public int RightTri = -1;//右三角形索引 
         }
+        //简化的三角形类
         public class Tri
         {
             public int NodeA;
@@ -182,35 +153,25 @@ namespace AGIS_work.Mehtod
             public int AdjTriB = -1;
             public int AdjTriC = -1;
         }
-
+        //生成三角网TIN
         public List<Edge> GeneTIN()
         {
             arrEdges.Clear();
             arrTris.Clear();
             arrDots = new PointF[mPointSet.PointList.Count];
             for (int kk = 0; kk < mPointSet.PointList.Count; kk++)
-            {
-                arrDots[kk] = new PointF((float)mPointSet.PointList[kk].X, (float)mPointSet.PointList[kk].Y);
-            }
+            { arrDots[kk] = new PointF((float)mPointSet.PointList[kk].X, (float)mPointSet.PointList[kk].Y); }
             int i, idxStart = 0, endTemp, ptindex;
             bool isExist;
             double angMax, angMin, angTemp, angRcdMax, angRcdTmp, lenMin, lenCur, lenTmp1, lenTmp2;
             Edge2 edge = new Edge2();
-
-
             //找到边界---（删除不需要的点，从X最小的地方开始找，直至回到起始点） 
             PointF dirCur = new PointF();
             PointF dirTmp1 = new PointF();
             PointF dirTmp2 = new PointF();
             PointF ptStart = new PointF();
-
             for (i = 1; i < arrDots.Length; i++)
-            {
-                if (arrDots[i].X < arrDots[idxStart].X)
-                {
-                    idxStart = i;
-                }
-            }
+            { if (arrDots[i].X < arrDots[idxStart].X) { idxStart = i; } }
             endTemp = idxStart - 1;
             ptStart.X = arrDots[idxStart].X;
             ptStart.Y = arrDots[idxStart].Y;
@@ -224,7 +185,6 @@ namespace AGIS_work.Mehtod
                 lenMin = 1000;
                 for (i = 0; i < arrDots.Length; i++)//找边界 
                 {
-
                     if (i != edge.Start)
                     {
                         dirTmp1.X = arrDots[i].X - ptStart.X;
@@ -232,16 +192,9 @@ namespace AGIS_work.Mehtod
                         lenTmp1 = Math.Sqrt(dirTmp1.X * dirTmp1.X + dirTmp1.Y * dirTmp1.Y);
                         angTemp = Math.Acos((dirCur.X * dirTmp1.X + dirCur.Y * dirTmp1.Y) / (lenTmp1 * lenCur));
                         if (angTemp < angMin)
-                        {
-                            angMin = angTemp;
-                            edge.End = i;
-                            lenMin = lenTmp1;
-                        }
+                        { angMin = angTemp; edge.End = i; lenMin = lenTmp1; }
                         else if (angTemp == angMin && lenTmp1 < lenMin)
-                        {
-                            edge.End = i;
-                            lenMin = lenTmp1;
-                        }
+                        { edge.End = i; lenMin = lenTmp1; }
                     }
                 }
                 arrEdges.Add(edge);
@@ -280,24 +233,15 @@ namespace AGIS_work.Mehtod
                                 //找角度最大的 
                                 lenCur = Math.Sqrt(dirCur.X * dirCur.X + dirCur.Y * dirCur.Y);//当前向量长度 
                                 lenTmp1 = Math.Sqrt(dirTmp1.X * dirTmp1.X + dirTmp1.Y * dirTmp1.Y);
-
                                 dirTmp2.X = arrDots[j].X - arrDots[edge.End].X;
                                 dirTmp2.Y = arrDots[j].Y - arrDots[edge.End].Y;
                                 lenTmp2 = Math.Sqrt(dirTmp2.X * dirTmp2.X + dirTmp2.Y * dirTmp2.Y);
                                 angRcdTmp = Math.Acos((dirCur.X * dirTmp1.X + dirCur.Y * dirTmp1.Y) / (lenTmp1 * lenCur));
                                 angTemp = Math.Acos((dirTmp2.X * dirTmp1.X + dirTmp2.Y * dirTmp1.Y) / (lenTmp1 * lenTmp2));
                                 if (angTemp > angMax)
-                                {
-                                    angMax = angTemp;
-                                    angRcdMax = angRcdTmp;
-                                    ptindex = j;
-                                }
+                                { angMax = angTemp; angRcdMax = angRcdTmp; ptindex = j; }
                                 else if (angTemp == angMax && angRcdMax < angRcdTmp)//相等取最左 
-                                {
-                                    angRcdMax = angRcdTmp;
-                                    ptindex = j;
-                                }
-
+                                { angRcdMax = angRcdTmp; ptindex = j; }
                             }
                         }
                     }
@@ -309,8 +253,6 @@ namespace AGIS_work.Mehtod
                         tri.NodeB = edge.End;
                         tri.NodeC = ptindex;
                         edge.LeftTri = arrTris.Count;
-
-
                         isExist = false;
                         //记录边1-需要检索是否存在过这条边-由于每条边都先有左三角形，如有三角形加入，必定为右三角形 
                         for (int k = 0; k < arrEdges.Count; k++)
@@ -338,10 +280,7 @@ namespace AGIS_work.Mehtod
                             edgeadd.End = edge.Start;
                             edgeadd.LeftTri = arrTris.Count;
                             arrEdges.Add(edgeadd);
-
                         }
-
-
                         isExist = false;
                         //记录边2 
                         for (int k = 0; k < arrEdges.Count; k++)
@@ -369,7 +308,6 @@ namespace AGIS_work.Mehtod
                             edgeadd.End = ptindex;
                             edgeadd.LeftTri = arrTris.Count;
                             arrEdges.Add(edgeadd);
-
                         }
                         tri.AdjTriC = edge.RightTri;//如果edge的右三角形不存在，由if进来可见左三角也不存在，这只能是边界，从而tri.AdjTriC=-1合理 
                         arrTris.Add(tri);//add the tri to the arraylist 
@@ -401,17 +339,9 @@ namespace AGIS_work.Mehtod
                                 angRcdTmp = Math.Acos((dirCur.X * dirTmp1.X + dirCur.Y * dirTmp1.Y) / (lenTmp1 * lenCur));
                                 angTemp = Math.Acos((dirTmp2.X * dirTmp1.X + dirTmp2.Y * dirTmp1.Y) / (lenTmp1 * lenTmp2));
                                 if (angTemp > angMax)
-                                {
-                                    angMax = angTemp;
-                                    angRcdMax = angRcdTmp;
-                                    ptindex = j;
-                                }
+                                { angMax = angTemp; angRcdMax = angRcdTmp; ptindex = j; }
                                 else if (angTemp == angMax && angRcdTmp > angTemp)//相等取最左 
-                                {
-                                    angRcdTmp = angTemp;
-                                    ptindex = j;
-                                }
-
+                                { angRcdTmp = angTemp; ptindex = j; }
                             }
                         }
                     }
@@ -442,7 +372,6 @@ namespace AGIS_work.Mehtod
                                 tri.AdjTriB = e.RightTri;
                                 isExist = true;
                                 break;
-
                             }
                         }
                         if (isExist == false)//如果不存在这条边，则新建一条边 
@@ -452,7 +381,6 @@ namespace AGIS_work.Mehtod
                             edgeadd.End = ptindex;
                             edgeadd.LeftTri = arrTris.Count;
                             arrEdges.Add(edgeadd);
-
                         }
                         isExist = false;
                         //记录边2 
@@ -485,9 +413,7 @@ namespace AGIS_work.Mehtod
                         tri.AdjTriC = edge.LeftTri;//如果edge的左三角形不存在，由if进来可见右三角也不存在，这只能是边界，从而tri.AdjTriC=-1合理 
                         arrTris.Add(tri);//add the tri to the arraylist	 
                     }
-
                 }
-
             }
             List<Edge> EdgeList = new List<Edge>();
             for (int gg = 0; gg < arrEdges.Count; gg++)

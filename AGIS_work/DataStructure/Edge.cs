@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace AGIS_work.DataStructure
 {
+    /// <summary>
+    /// 线段类
+    /// </summary>
     public class Edge
     {
         public int EID { get; private set; }
@@ -26,23 +29,16 @@ namespace AGIS_work.DataStructure
             this.EID = _eid--;
         }
         public double MaxValue()
-        {
-            return Math.Max(StartPoint.Value, EndPoint.Value);
-        }
+        { return Math.Max(StartPoint.Value, EndPoint.Value); }
 
         public double MinValue()
-        {
-            return Math.Min(StartPoint.Value, EndPoint.Value);
-        }
+        { return Math.Min(StartPoint.Value, EndPoint.Value); }
 
         public double GetRelativeCoordinate(double value)
-        {
-            return (value - StartPoint.Value) / (EndPoint.Value - StartPoint.Value);
-        }
+        { return (value - StartPoint.Value) / (EndPoint.Value - StartPoint.Value); }
+
         public double GetValue(double ralativeCoordinate)
-        {
-            return ralativeCoordinate * (EndPoint.Value - StartPoint.Value) + StartPoint.Value;
-        }
+        { return ralativeCoordinate * (EndPoint.Value - StartPoint.Value) + StartPoint.Value; }
 
         public bool IsEqulesEdge(int oid1, int oid2)
         {
@@ -50,6 +46,7 @@ namespace AGIS_work.DataStructure
                 (StartPoint.OID == oid2) && (EndPoint.OID == oid1));
         }
 
+        //获取两边交点
         public static DataPoint IntersectPoint(Edge e1, Edge e2)
         {
             double IntersectX =
@@ -87,7 +84,7 @@ namespace AGIS_work.DataStructure
             else return null;
         }
 
-        public static double IntersectPointRelativeLoc(Edge e1,Edge e2)
+        public static double IntersectPointRelativeLoc(Edge e1, Edge e2)
         {
             double IntersectX =
                ((e1.EndPoint.X - e1.StartPoint.X) * (e2.StartPoint.X - e2.EndPoint.X) * (e2.StartPoint.Y - e1.StartPoint.Y) -
@@ -127,8 +124,6 @@ namespace AGIS_work.DataStructure
         }
 
         public override string ToString()
-        {
-            return string.Format("EdgeID:{0},StaID:{1},EndID:{2}", this.EID, this.StartOID, this.EndOID);
-        }
+        { return string.Format("EdgeID:{0},StaID:{1},EndID:{2}", this.EID, this.StartOID, this.EndOID); }
     }
 }

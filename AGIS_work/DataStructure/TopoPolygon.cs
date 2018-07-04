@@ -6,14 +6,15 @@ using System.Threading.Tasks;
 
 namespace AGIS_work.DataStructure
 {
+    //拓扑多边形
     public class TopoPolygon
     {
         private static int _polygonID = 0;
-        public int innerId = 0;
-        public int PID { get; private set; }
-        public List<TopoPolyline> TopologyArcs { get; set; }
-        public TopoPolygon OuterPolygon { get; set; }
-        public List<TopoPolygon> InnerPolygons { get; set; }
+        public int innerId = 0; //内部码
+        public int PID { get; private set; }//唯一标识码
+        public List<TopoPolyline> TopologyArcs { get; set; }//相关弧段
+        public TopoPolygon OuterPolygon { get; set; }//外多边形
+        public List<TopoPolygon> InnerPolygons { get; set; }//内多边形
         public MinBoundRect MBR { get; private set; }
 
         public TopoPolygon()
@@ -35,10 +36,7 @@ namespace AGIS_work.DataStructure
             this.TopologyArcs.AddRange(lines);
             List<int> ArcIDList = new List<int>();
             foreach (var arc in lines)
-            {
-                ArcIDList.Add(arc.ArcID);
-                MBR.UpdateRect(arc.MBR);
-            }
+            { ArcIDList.Add(arc.ArcID); MBR.UpdateRect(arc.MBR); }
             ArcIDList.Sort();
             int hasgCode = 1;
             foreach (var arcid in ArcIDList)
@@ -56,7 +54,6 @@ namespace AGIS_work.DataStructure
             TopoPoint e1 = TopologyArcs[0].EndNode;
             TopoPoint b2 = TopologyArcs.Last().BeginNode;
             TopoPoint e2 = TopologyArcs.Last().EndNode;
-
             TopoPoint beginPoint;
             if (b1.PointID == b2.PointID)
                 beginPoint = b1;
@@ -80,7 +77,7 @@ namespace AGIS_work.DataStructure
             }
             return pointArray.ToArray();
         }
-
+        //计算面积
         public double GetArea()
         {
             TopoPoint[] points = this.ConvertToPointArray();
@@ -89,31 +86,26 @@ namespace AGIS_work.DataStructure
                .Sum() / 2);
             return area;
         }
-
+        //计算周长
         public double GetPerimeter()
         {
             TopoPoint[] points = this.ConvertToPointArray();
             double perimeter = 0;
             for (int i = 0; i < points.Length - 1; i++)
-            {
-                perimeter += points[i].GetDistance(points[i + 1]);
-            }
+            { perimeter += points[i].GetDistance(points[i + 1]); }
             return perimeter;
         }
-
+        //判断点是否在区域内
         public bool IfPointInRegion(TopoPoint todeterPoint)
         {
             TopoPoint[] points = this.ConvertToPointArray();
             TopoPoint rayPoint = new TopoPoint(todeterPoint.X * 2, todeterPoint.Y, todeterPoint.Z, false);
             int intersectCount = 0;
             for (int i = 0; i < points.Length - 1; i++)
-            {
-                if (TopoPolygon.IntersectPoint(points[i], points[i + 1], todeterPoint, rayPoint) == true)
-                    intersectCount++;
-            }
+            { if (TopoPolygon.IntersectPoint(points[i], points[i + 1], todeterPoint, rayPoint) == true) intersectCount++; }
             return (intersectCount / 2 != 0);
         }
-
+        //判断点是否在区域内 法2
         public static bool IntersectPoint(TopoPoint p1, TopoPoint p2, TopoPoint todeterPoint, TopoPoint rays)
         {
             double IntersectX =
@@ -136,8 +128,5 @@ namespace AGIS_work.DataStructure
                 return true;
             else return false;
         }
-
-
-
     }
 }

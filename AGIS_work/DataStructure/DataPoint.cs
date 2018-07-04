@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace AGIS_work.DataStructure
 {
+    /// <summary>
+    /// 数据点类
+    /// </summary>
     public class DataPoint
     {
         public int ID { get; private set; }
@@ -41,26 +44,18 @@ namespace AGIS_work.DataStructure
         }
 
         public override string ToString()
-        {
-            return string.Format("ID:{0} Name:{1}\r\n Point({2},{3})\r\nValue:{4}",
-                ID, Name, X, Y, Value);
-        }
+        {return string.Format("ID:{0} Name:{1}\r\n Point({2},{3})\r\nValue:{4}",
+                ID, Name, X, Y, Value);}
 
         //获取与另一点得距离
         public double GetDistance(DataPoint other)
-        {
-            return Math.Sqrt(Math.Pow(this.X - other.X, 2) + Math.Pow(this.Y - other.Y, 2));
-        }
+        {return Math.Sqrt(Math.Pow(this.X - other.X, 2) + Math.Pow(this.Y - other.Y, 2));}
 
         public double GetDistance(double x, double y)
-        {
-            return Math.Sqrt(Math.Pow(this.X - x, 2) + Math.Pow(this.Y - y, 2));
-        }
+        {return Math.Sqrt(Math.Pow(this.X - x, 2) + Math.Pow(this.Y - y, 2));}
 
         public double GetDistanceP2(double x, double y)
-        {
-            return (Math.Pow(this.X - x, 2) + Math.Pow(this.Y - y, 2));
-        }
+        {return (Math.Pow(this.X - x, 2) + Math.Pow(this.Y - y, 2));}
 
         //获取在另一点的方位角(角度)
         public double GetPosition(double x,double y)
@@ -70,43 +65,23 @@ namespace AGIS_work.DataStructure
             if (deltaX * deltaY == 0)
             {
                 if (deltaX == 0)
-                {
-                    if (deltaY > 0)
-                        return 90;
-                    else if (deltaY < 0)
-                        return 270;
-                    else
-                        throw new Exception("DataPoint.GetPosition:两点重合");                    
-                }
-                else
-                {
-                    if (deltaX > 0)
-                        return 0;
-                    else return 180;
-                }
+                {if (deltaY > 0)return 90;else if (deltaY < 0)return 270;
+                    else throw new Exception("DataPoint.GetPosition:两点重合"); }
+                else{if (deltaX > 0)return 0;else return 180;}
             }
             else
             {
                 double alpha = Math.Atan(Math.Abs(deltaY / deltaX));
-                if (deltaX > 0)
-                {
-                    if (deltaY > 0) return alpha;
-                    else return 360 - alpha;
-                }
-                else 
-                {
-                    if (deltaY > 0) return 180 - alpha;
-                    else return 180 + alpha;
-                }
+                if (deltaX > 0) {if (deltaY > 0) return alpha;else return 360 - alpha; }
+                else  {if (deltaY > 0) return 180 - alpha;else return 180 + alpha;}
             }
 
         }
 
         public static Vector2D operator - (DataPoint p1 ,DataPoint p2)
-        {
-            return new Vector2D(p1.X - p2.X, p1.Y - p2.Y);
-        }
+        {return new Vector2D(p1.X - p2.X, p1.Y - p2.Y);}
 
+        //获取三点构成的角度
         public static double Angle(DataPoint c, DataPoint a, DataPoint b)
         {
             double ang;
@@ -116,27 +91,14 @@ namespace AGIS_work.DataStructure
             ang = Math.Acos((l1 * l1 + l2 * l2 - l3 * l3) / (2 * l1 * l2));
             return ang;
         }
-
         public static int LeftOrRight(DataPoint c, DataPoint a, DataPoint b)
         {
             int youbian;
-            double S;
-            S = (a.X - c.X) * (b.Y - c.Y) - (a.Y - c.Y) * (b.X - c.X);
-            if (S > 0)
-            {
-                youbian = 1;
-            }
-            else if (S < 0)
-            {
-                youbian = -1;
-            }
-            else
-            {
-                youbian = 0;
-            }
+            double S= (a.X - c.X) * (b.Y - c.Y) - (a.Y - c.Y) * (b.X - c.X);
+            if (S > 0){youbian = 1;}
+            else if (S < 0) {youbian = -1;}
+            else{youbian = 0;}
             return youbian;
         }
-
-
     }
 }
