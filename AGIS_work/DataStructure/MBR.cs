@@ -37,6 +37,15 @@ namespace AGIS_work.DataStructure
             return;
         }
 
+        public void UpdateRect(MinBoundRect mbr)
+        {
+            this.MinX = Math.Min(this.MinX, mbr.MinX);
+            this.MinY = Math.Min(this.MinY, mbr.MinY);
+            this.MaxX = Math.Max(this.MaxX, mbr.MaxX);
+            this.MaxY = Math.Max(this.MaxY, mbr.MaxY);
+            return;
+        }
+
         public void PanningVector(double deltaX,double deltaY)
         {
             this.MinX += deltaX;

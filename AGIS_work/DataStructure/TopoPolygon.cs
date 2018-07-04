@@ -9,10 +9,12 @@ namespace AGIS_work.DataStructure
     public class TopoPolygon
     {
         private static int _polygonID = 0;
+        public int innerId = 0;
         public int PID { get; private set; }
         public List<TopoPolyline> TopologyArcs { get; set; }
         public TopoPolygon OuterPolygon { get; set; }
         public List<TopoPolygon> InnerPolygons { get; set; }
+        public MinBoundRect MBR { get; private set; }
 
         public TopoPolygon()
         {
@@ -20,11 +22,14 @@ namespace AGIS_work.DataStructure
             OuterPolygon = null;
             TopologyArcs = new List<TopoPolyline>();
             InnerPolygons = new List<TopoPolygon>();
+            MBR = new MinBoundRect();
+            innerId = this.PID;
         }
 
         public TopoPolygon(TopoPolyline[] lines)
         {
             OuterPolygon = null;
+            MBR = new MinBoundRect();
             TopologyArcs = new List<TopoPolyline>();
             InnerPolygons = new List<TopoPolygon>();
             this.TopologyArcs.AddRange(lines);
@@ -32,6 +37,7 @@ namespace AGIS_work.DataStructure
             foreach (var arc in lines)
             {
                 ArcIDList.Add(arc.ArcID);
+                MBR.UpdateRect(arc.MBR);
             }
             ArcIDList.Sort();
             int hasgCode = 1;
@@ -40,7 +46,7 @@ namespace AGIS_work.DataStructure
                 hasgCode *= arcid;
             }
             this.PID = hasgCode.GetHashCode();
-
+            innerId = _polygonID++;
         }
 
         public TopoPoint[] ConvertToPointArray()

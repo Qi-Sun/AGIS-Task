@@ -180,7 +180,7 @@ namespace AGIS_work
                         PointF[] pf = agisControl.GetScreenLine(line);
                         g.DrawLines(this.TopolopyLinePen, pf);
                     }
-                    if (SelectedTopoPolygon!=null && this.IsQueryTopoPolygon == true)
+                    if (SelectedTopoPolygon != null && this.IsQueryTopoPolygon == true)
                     {
                         TopoPoint[] tempLines = SelectedTopoPolygon.ConvertToPointArray();
                         Graphics g = e.Graphics;
@@ -324,11 +324,20 @@ namespace AGIS_work
         public Color GetRandomColor()
         {
             Random RandomNum_First = new Random((int)DateTime.Now.Ticks);
-            System.Threading.Thread.Sleep(RandomNum_First.Next(50));
+            System.Threading.Thread.Sleep(RandomNum_First.Next(5));
             Random RandomNum_Sencond = new Random((int)DateTime.Now.Ticks);
             //  为了在白色背景上显示，尽量生成深色
             int int_Red = RandomNum_First.Next(256);
             int int_Green = RandomNum_Sencond.Next(256);
+            int int_Blue = (int_Red + int_Green > 400) ? 0 : 400 - int_Red - int_Green;
+            int_Blue = (int_Blue > 255) ? 255 : int_Blue;
+            return Color.FromArgb(int_Red, int_Green, int_Blue);
+        }
+
+        public Color GetRandomColor(int pid)
+        {
+            int int_Red = Math.Abs(pid) % 256;
+            int int_Green = Math.Abs(pid.GetHashCode()) % 256;
             int int_Blue = (int_Red + int_Green > 400) ? 0 : 400 - int_Red - int_Green;
             int_Blue = (int_Blue > 255) ? 255 : int_Blue;
             return Color.FromArgb(int_Red, int_Green, int_Blue);
@@ -517,7 +526,7 @@ namespace AGIS_work
                     ContourPolylineSet tempContourPolyline = new ContourPolylineSet();
                     //计算等值线条数
                     int lineCount = (int)((settingForm.MaxValue - settingForm.MinValue) / settingForm.IntervalValue);
-                    for (int k = 0; k < lineCount; k++)
+                    for (int k = 0; k <= lineCount; k++)
                     {
                         double tempElevation = settingForm.MaxValue - k * settingForm.IntervalValue;
                         double[,] GridRealLoc = GridPointPositionMatrix();
@@ -696,7 +705,7 @@ namespace AGIS_work
                 List<Edge> contourLinesList = new List<Edge>();
                 //计算等值线条数
                 int lineCount = (int)((settingForm.MaxValue - settingForm.MinValue) / settingForm.IntervalValue);
-                for (int i = 0; i < lineCount; i++)
+                for (int i = 0; i <= lineCount; i++)
                 {
                     for (int j = 0; j < triList.Length; j++)
                     {
@@ -719,11 +728,20 @@ namespace AGIS_work
         private void 生成拓扑关系ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (GridContourPolylineList == null) return;
-            this.GenerateTopologyRelatation(this.GridContourPolylineList);
-            this.ConvertLineEdgeToPolyline();
-            this.mTopoPointSet = new TopoPointSet(this.mTopoPolylineSet.TopoPolylineList.ToArray());
-            this.mTopoPolygonSet = this.mTopoPointSet.GenerateTopoPolygonSet();
-            this.mTopoPolygonSet.Recheck(this.agisControl.GetRegionArea());
+            try
+            {
+                this.GenerateTopologyRelatation(this.GridContourPolylineList);
+                this.ConvertLineEdgeToPolyline();
+                this.mTopoPointSet = new TopoPointSet(this.mTopoPolylineSet.TopoPolylineList.ToArray());
+                this.mTopoPolygonSet = this.mTopoPointSet.GenerateTopoPolygonSet();
+                this.mTopoPolygonSet.Recheck(this.agisControl.GetRegionArea());
+                MessageBox.Show("拓扑关系生成成功！", "生成拓扑关系");
+            }
+            catch(Exception err)
+            {
+
+                MessageBox.Show(err.Message, "错误！");
+            }
             return;
         }
 
@@ -748,12 +766,52 @@ namespace AGIS_work
 
         private void 导出拓扑关系表ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            SaveTopologyTableForm saveForm =
+                new SaveTopologyTableForm(this.mTopoPointSet, this.mTopoPolylineSet, this.mTopoPolygonSet);
+            if (saveForm.ShowDialog(this) == DialogResult.OK)
+            {
 
+            }
         }
 
         private void 程序信息ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            MessageBox.Show(this, @"
+(1)读取文件
+    “文件” —— “打开”：选取特定的文本文件，打开成功后会在界面显示数据点。
+(2)基本操作
+    漫游：鼠标左键拖动。
+    放大/缩小：鼠标滚轮 上/下 滚动。
+    全局：单击鼠标中键，缩放至原始范围。
+(3)选择插值算法
+    “格网模型” —— “距离平方倒数法”/“按方位加权平均法”设定参数并选择该插值方法。
+(4)生成格网模型
+    “格网模型” —— “生成格网”，选择X,Y方向分位数生成网格。
+    “格网模型” —— “加密格网”，在原有格网上加密,需要已有格网。
+    “格网模型” —— “查询格网属性”，开启/关闭查询，双击格网点，显示信息。
+    “格网模型” —— “设置” —— “显示/隐藏格网”，设置格网可见性。
+    “格网模型” —— “设置” —— “清除格网”，清除已建立的格网模型。
+(5)TIN模型
+    “TIN模型” —— “逐点插入法”，生成TIN模型并显示。
+    “TIN模型” —— “设置” —— “显示/隐藏TIN”，设置TIN可见性。
+    “TIN模型” —— “设置” —— “清除TIN”，清除已建立的TIN模型。
+(6)等值线  
+    等值线的最大值，最小值，间距由对话框设定。
+    “格网模型” —— “生成等值线”，根据格网模型生成等值线。
+    “格网模型” —— “生成等值线” ———— “平滑”，是否平滑生成的等值线。
+    “TIN模型” —— “生成等值线”，根据TIN模型生成等值线。
+(7)拓扑关系
+    “拓扑关系” —— “生成拓扑关系”，根据由网格生成的等值线，构建要求的拓扑关系
+    “拓扑关系” —— “可视化”，对生成的拓扑点线面进行可视化，可分别选择可视性
+        点：结点为蓝色方格，中间点为绿色方格
+        线：绿色线划（与等值线，格网重叠，效果不好可取消格网和等值线）
+        面：随机颜色（每次刷新颜色不同，故刷新有延迟）
+    “拓扑关系” —— “查询”，按多边形ID，对多边形的周长和面积进行查询
+    “拓扑关系” —— “导出拓扑多边形关系表”，可分别选择要导出的数据表和路径。
+(8)其他
+    格网模型与TIN模型之间的切换还存在些问题，可能会在显示过程中出现奇怪的现象。
+    如果出现问题，重启程序试试。
+", "程序信息", MessageBoxButtons.OK);
         }
 
         private void agisControl_MouseHover(object sender, EventArgs e)
@@ -802,7 +860,7 @@ namespace AGIS_work
                 || GridDivisionCount_Y * EachGridDivisionCount_Y < 1
                 || this.IsGridVisible == false)
                 return;
-            if (e.Clicks == 2 && this.IsQueryIntersection == true && this.ShowTopology == false)
+            if (e.Clicks == 2 && this.IsQueryIntersection == true && this.ShowTopology == false && this.IsGridVisible == true)
             {
                 SelectPointX = SelectPointY = -1;
                 int gridScreen_AxisX_count = GridScreen_AxisX.Count;
@@ -895,15 +953,15 @@ namespace AGIS_work
             double RightX = agisControl.MBR_Origin.MaxX;
             double CenterX = (LeftX + RightX) / 2;
             double CenterY = (BottomY + TopY) / 2;
-            DataPoint rectP0 = new DataPoint(-10000, "Rect0", CenterX, CenterY, 99999);
-            DataPoint rectP1 = new DataPoint(-10001, "Rect1", CenterX, TopY, 99999);
-            DataPoint rectP2 = new DataPoint(-10002, "Rect2", RightX, TopY, 99999);
-            DataPoint rectP3 = new DataPoint(-10003, "Rect3", RightX, CenterY, 99999);
-            DataPoint rectP4 = new DataPoint(-10004, "Rect4", RightX, BottomY, 99999);
-            DataPoint rectP5 = new DataPoint(-10005, "Rect5", CenterX, BottomY, 99999);
-            DataPoint rectP6 = new DataPoint(-10006, "Rect6", LeftX, BottomY, 99999);
-            DataPoint rectP7 = new DataPoint(-10007, "Rect7", LeftX, CenterY, 99999);
-            DataPoint rectP8 = new DataPoint(-10008, "Rect8", LeftX, TopY, 99999);
+            DataPoint rectP0 = new DataPoint(-10000, "Rect0", CenterX, CenterY, this.agisControl.GetGridInterpolationValue(CenterX, CenterY));
+            DataPoint rectP1 = new DataPoint(-10001, "Rect1", CenterX, TopY, this.agisControl.GetGridInterpolationValue(CenterX, TopY));
+            DataPoint rectP2 = new DataPoint(-10002, "Rect2", RightX, TopY, this.agisControl.GetGridInterpolationValue(RightX, TopY));
+            DataPoint rectP3 = new DataPoint(-10003, "Rect3", RightX, CenterY, this.agisControl.GetGridInterpolationValue(RightX, CenterY));
+            DataPoint rectP4 = new DataPoint(-10004, "Rect4", RightX, BottomY, this.agisControl.GetGridInterpolationValue(RightX, BottomY));
+            DataPoint rectP5 = new DataPoint(-10005, "Rect5", CenterX, BottomY, this.agisControl.GetGridInterpolationValue(CenterX, BottomY));
+            DataPoint rectP6 = new DataPoint(-10006, "Rect6", LeftX, BottomY, this.agisControl.GetGridInterpolationValue(LeftX, BottomY));
+            DataPoint rectP7 = new DataPoint(-10007, "Rect7", LeftX, CenterY, this.agisControl.GetGridInterpolationValue(LeftX, CenterY));
+            DataPoint rectP8 = new DataPoint(-10008, "Rect8", LeftX, TopY, this.agisControl.GetGridInterpolationValue(LeftX, TopY));
             //给定的边
 
             List<Edge> GivenEdges = new List<Edge>();
@@ -995,6 +1053,33 @@ namespace AGIS_work
         private void 查询ToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
         {
             this.IsQueryTopoPolygon = 查询ToolStripMenuItem.Checked;
+        }
+
+        private void 作者信息ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(this, string.Format(
+                @"
+作者：     SunQi
+作者单位： 北京大学地空学院
+专业：     地图学与地理信息系统
+项目：     https://github.com/Qi-Sun/AGIS-Task
+"
+                ), "作者信息", MessageBoxButtons.OK);
+        }
+
+        private void 清除格网ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GridDivisionCount_X = 0;
+            GridDivisionCount_Y = 0;
+            EachGridDivisionCount_X = 1;
+            EachGridDivisionCount_Y = 1;
+            this.IsGridVisible = false;
+            this.显示隐藏格网ToolStripMenuItem.Checked = false;
+        }
+
+        private void 清楚TINToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ShowTin = false;
         }
     }
 }

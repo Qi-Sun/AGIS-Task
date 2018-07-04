@@ -230,6 +230,7 @@
             this.清除格网ToolStripMenuItem.Name = "清除格网ToolStripMenuItem";
             this.清除格网ToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
             this.清除格网ToolStripMenuItem.Text = "清除格网";
+            this.清除格网ToolStripMenuItem.Click += new System.EventHandler(this.清除格网ToolStripMenuItem_Click);
             // 
             // TIN模型ToolStripMenuItem
             // 
@@ -247,20 +248,20 @@
             // 
             this.逐点插入法ToolStripMenuItem.CheckOnClick = true;
             this.逐点插入法ToolStripMenuItem.Name = "逐点插入法ToolStripMenuItem";
-            this.逐点插入法ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.逐点插入法ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.逐点插入法ToolStripMenuItem.Text = "逐点插入法";
             this.逐点插入法ToolStripMenuItem.Click += new System.EventHandler(this.逐点插入法ToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(133, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(149, 6);
             // 
             // 生成等值线ToolStripMenuItem1
             // 
             this.生成等值线ToolStripMenuItem1.CheckOnClick = true;
             this.生成等值线ToolStripMenuItem1.Name = "生成等值线ToolStripMenuItem1";
-            this.生成等值线ToolStripMenuItem1.Size = new System.Drawing.Size(136, 22);
+            this.生成等值线ToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.生成等值线ToolStripMenuItem1.Text = "生成等值线";
             this.生成等值线ToolStripMenuItem1.CheckedChanged += new System.EventHandler(this.生成等值线ToolStripMenuItem1_CheckedChanged);
             this.生成等值线ToolStripMenuItem1.Click += new System.EventHandler(this.生成等值线ToolStripMenuItem1_Click);
@@ -268,7 +269,7 @@
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(133, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(149, 6);
             // 
             // 设置ToolStripMenuItem1
             // 
@@ -276,7 +277,7 @@
             this.显示隐藏TINToolStripMenuItem,
             this.清楚TINToolStripMenuItem});
             this.设置ToolStripMenuItem1.Name = "设置ToolStripMenuItem1";
-            this.设置ToolStripMenuItem1.Size = new System.Drawing.Size(136, 22);
+            this.设置ToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.设置ToolStripMenuItem1.Text = "设置";
             this.设置ToolStripMenuItem1.Click += new System.EventHandler(this.设置ToolStripMenuItem1_Click);
             // 
@@ -291,8 +292,9 @@
             // 清楚TINToolStripMenuItem
             // 
             this.清楚TINToolStripMenuItem.Name = "清楚TINToolStripMenuItem";
-            this.清楚TINToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.清楚TINToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.清楚TINToolStripMenuItem.Text = "清除TIN";
+            this.清楚TINToolStripMenuItem.Click += new System.EventHandler(this.清楚TINToolStripMenuItem_Click);
             // 
             // 拓扑关系ToolStripMenuItem
             // 
@@ -351,13 +353,14 @@
             // 作者信息ToolStripMenuItem
             // 
             this.作者信息ToolStripMenuItem.Name = "作者信息ToolStripMenuItem";
-            this.作者信息ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.作者信息ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.作者信息ToolStripMenuItem.Text = "作者信息";
+            this.作者信息ToolStripMenuItem.Click += new System.EventHandler(this.作者信息ToolStripMenuItem_Click);
             // 
             // 程序信息ToolStripMenuItem
             // 
             this.程序信息ToolStripMenuItem.Name = "程序信息ToolStripMenuItem";
-            this.程序信息ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.程序信息ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.程序信息ToolStripMenuItem.Text = "程序信息";
             this.程序信息ToolStripMenuItem.Click += new System.EventHandler(this.程序信息ToolStripMenuItem_Click);
             // 
@@ -429,7 +432,7 @@
             // 拓扑点ToolStripMenuItem
             // 
             this.拓扑点ToolStripMenuItem.Name = "拓扑点ToolStripMenuItem";
-            this.拓扑点ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.拓扑点ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.拓扑点ToolStripMenuItem.Text = "拓扑点";
             this.拓扑点ToolStripMenuItem.CheckedChanged += new System.EventHandler(this.拓扑点ToolStripMenuItem_CheckedChanged);
             this.拓扑点ToolStripMenuItem.Click += new System.EventHandler(this.拓扑点ToolStripMenuItem_Click);
@@ -437,7 +440,7 @@
             // 拓扑边ToolStripMenuItem
             // 
             this.拓扑边ToolStripMenuItem.Name = "拓扑边ToolStripMenuItem";
-            this.拓扑边ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.拓扑边ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.拓扑边ToolStripMenuItem.Text = "拓扑边";
             this.拓扑边ToolStripMenuItem.CheckedChanged += new System.EventHandler(this.拓扑边ToolStripMenuItem_CheckedChanged);
             this.拓扑边ToolStripMenuItem.Click += new System.EventHandler(this.拓扑边ToolStripMenuItem_Click);
@@ -445,7 +448,7 @@
             // 拓扑多边形ToolStripMenuItem
             // 
             this.拓扑多边形ToolStripMenuItem.Name = "拓扑多边形ToolStripMenuItem";
-            this.拓扑多边形ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.拓扑多边形ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.拓扑多边形ToolStripMenuItem.Text = "拓扑多边形";
             this.拓扑多边形ToolStripMenuItem.CheckedChanged += new System.EventHandler(this.拓扑多边形ToolStripMenuItem_CheckedChanged);
             this.拓扑多边形ToolStripMenuItem.Click += new System.EventHandler(this.拓扑多边形ToolStripMenuItem_Click);

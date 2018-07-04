@@ -50,6 +50,7 @@
             this.textBoxNodePath.Name = "textBoxNodePath";
             this.textBoxNodePath.Size = new System.Drawing.Size(375, 21);
             this.textBoxNodePath.TabIndex = 4;
+            this.textBoxNodePath.Text = "../../Output/TestData_TopologyNode.txt";
             // 
             // textBoxPointPath
             // 
@@ -57,6 +58,7 @@
             this.textBoxPointPath.Name = "textBoxPointPath";
             this.textBoxPointPath.Size = new System.Drawing.Size(375, 21);
             this.textBoxPointPath.TabIndex = 5;
+            this.textBoxPointPath.Text = "../../Output/TestData_TopologyPoint.txt";
             // 
             // textBoxArcPath
             // 
@@ -64,6 +66,7 @@
             this.textBoxArcPath.Name = "textBoxArcPath";
             this.textBoxArcPath.Size = new System.Drawing.Size(375, 21);
             this.textBoxArcPath.TabIndex = 6;
+            this.textBoxArcPath.Text = "../../Output/TestData_TopologyPolyline.txt";
             // 
             // textBoxGonPath
             // 
@@ -71,6 +74,7 @@
             this.textBoxGonPath.Name = "textBoxGonPath";
             this.textBoxGonPath.Size = new System.Drawing.Size(375, 21);
             this.textBoxGonPath.TabIndex = 7;
+            this.textBoxGonPath.Text = "../../Output/TestData_TopologyPolygon.txt";
             // 
             // buttonSave
             // 
@@ -80,6 +84,7 @@
             this.buttonSave.TabIndex = 8;
             this.buttonSave.Text = "保存";
             this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
             // 
             // buttonCancel
             // 
@@ -90,6 +95,7 @@
             this.buttonCancel.TabIndex = 9;
             this.buttonCancel.Text = "取消";
             this.buttonCancel.UseVisualStyleBackColor = true;
+            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
             // buttonNodeSelect
             // 
@@ -99,6 +105,7 @@
             this.buttonNodeSelect.TabIndex = 10;
             this.buttonNodeSelect.Text = "选择";
             this.buttonNodeSelect.UseVisualStyleBackColor = true;
+            this.buttonNodeSelect.Click += new System.EventHandler(this.buttonNodeSelect_Click);
             // 
             // buttonPointSelect
             // 
@@ -108,6 +115,7 @@
             this.buttonPointSelect.TabIndex = 11;
             this.buttonPointSelect.Text = "选择";
             this.buttonPointSelect.UseVisualStyleBackColor = true;
+            this.buttonPointSelect.Click += new System.EventHandler(this.buttonPointSelect_Click);
             // 
             // buttonArcSelect
             // 
@@ -117,6 +125,7 @@
             this.buttonArcSelect.TabIndex = 12;
             this.buttonArcSelect.Text = "选择";
             this.buttonArcSelect.UseVisualStyleBackColor = true;
+            this.buttonArcSelect.Click += new System.EventHandler(this.buttonArcSelect_Click);
             // 
             // buttonGonSelect
             // 
@@ -126,6 +135,7 @@
             this.buttonGonSelect.TabIndex = 13;
             this.buttonGonSelect.Text = "选择";
             this.buttonGonSelect.UseVisualStyleBackColor = true;
+            this.buttonGonSelect.Click += new System.EventHandler(this.buttonGonSelect_Click);
             // 
             // checkBoxNode
             // 

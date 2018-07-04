@@ -216,6 +216,7 @@
   <ItemGroup>
     <Folder Include="Forms\Other\" />
     <Folder Include="Forms\Tin\" />
+    <Folder Include="Output\" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\xunit.analyzers.0.8.0\analyzers\dotnet\cs\xunit.analyzers.dll" />

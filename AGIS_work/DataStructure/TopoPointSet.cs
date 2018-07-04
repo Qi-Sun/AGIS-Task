@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -231,6 +232,38 @@ namespace AGIS_work.DataStructure
             }
             SortTheSearchLine(tempList, curNode.Item3);
             return tempList[0];
+        }
+
+        public void SaveNodeTableToFile(string filename)
+        {
+            StreamWriter sw = new StreamWriter(filename);
+            sw.WriteLine("ID\tNode_ID\tX\tY\tZ\tArc_Num\tArc_IDs");
+            foreach (var node in TopoNodeList)
+            {
+                string arcIDs = "";
+                foreach (var arc in node.TopologyArcs)
+                    arcIDs += arc.ArcID + ",";
+                sw.WriteLine(
+                    string.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}",
+                    node.Innerid, node.PointID, node.X, node.Y, node.Z, node.TopologyArcs.Count, arcIDs.Remove(arcIDs.Length - 1)));
+            }
+            sw.Close();
+        }
+
+        public void SavePointTableToFile(string filename)
+        {
+            StreamWriter sw = new StreamWriter(filename);
+            sw.WriteLine("ID\tNode_ID\tX\tY\tZ\tArc_Num\tArc_IDs");
+            foreach (var point in TopoPointList)
+            {
+                string arcIDs = "";
+                foreach (var arc in point.TopologyArcs)
+                    arcIDs += arc.ArcID + ",";
+                sw.WriteLine(
+                    string.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}",
+                    point.Innerid, point.PointID, point.X, point.Y, point.Z, point.TopologyArcs.Count, arcIDs.Remove(arcIDs.Length - 1)));
+            }
+            sw.Close();
         }
     }
 }

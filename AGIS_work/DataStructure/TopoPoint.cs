@@ -9,6 +9,7 @@ namespace AGIS_work.DataStructure
     public class TopoPoint
     {
         private static int _pointID = 0;
+        public int Innerid = 0;
         public int PointID { get; private set; }
         public bool IsNode { get; private set; }
         public double X { get; private set; }
@@ -24,17 +25,18 @@ namespace AGIS_work.DataStructure
             this.Y = dpoint.Y;
             this.Z = dpoint.Value;
             this.TopologyArcs = new List<TopoPolyline>();
-
+            Innerid = _pointID++;
         }
 
         public TopoPoint(double x,double y,double  z, bool isNode)
         {
-            this.PointID = _pointID--;
+            this.PointID = _pointID++;
             this.IsNode = isNode;
             this.X = x;
             this.Y = y;
             this.Z = z;
             this.TopologyArcs = new List<TopoPolyline>();
+            Innerid = _pointID++;
 
         }
         /// <summary>

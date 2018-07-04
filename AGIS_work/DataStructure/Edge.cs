@@ -82,7 +82,8 @@ namespace AGIS_work.DataStructure
             else if (Math.Abs(relativeE2 - 1) < 1E-5)
                 return e2.EndPoint;
             else if (relativeE1 < 1 && relativeE1 > 0 && relativeE2 > 0 && relativeE2 < 1)
-                return new DataPoint(tempID, tempID.ToString(), IntersectX, IntersectY, 99999);
+                return new DataPoint(tempID, tempID.ToString(), IntersectX, IntersectY,
+                    e1.StartPoint.Value + relativeE1 * (e1.EndPoint.Value - e1.StartPoint.Value));
             else return null;
         }
 

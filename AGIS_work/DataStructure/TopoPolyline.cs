@@ -10,22 +10,28 @@ namespace AGIS_work.DataStructure
     {
         public int ArcID { get; private set; }
         private int _ArcID = 0;
+        public int Innerid { get; private set; }
         public TopoPoint BeginNode { get; private set; }
         public TopoPoint EndNode { get; private set; }
         public List<TopoPoint> MiddlePoint { get; private set; }
         public TopoPolygon LeftPolygon { get; set; }
         public TopoPolygon RightPolygon { get; set; }
+        public MinBoundRect MBR { get; private set; }
 
         public TopoPolyline()
         {
             this.ArcID = _ArcID ++;
             MiddlePoint = new List<TopoPoint>();
+            Innerid = this.ArcID;
+            MBR = new MinBoundRect();
         }
 
         public TopoPolyline(ContourPolyline polyline)
         {
             this.ArcID = polyline.PID;
+            Innerid = _ArcID++;
             MiddlePoint = new List<TopoPoint>();
+            MBR = new MinBoundRect();
             if (polyline.PointList.Count >= 2)
             {
                 TopoPoint startPoint = new TopoPoint(polyline.PointList.First(), true);
@@ -34,11 +40,18 @@ namespace AGIS_work.DataStructure
                 TopoPoint endPoint = new TopoPoint(polyline.PointList.Last(), true);
                 endPoint.TopologyArcs.Add(this);
                 this.EndNode = endPoint;
+                MBR.UpdateRect(startPoint.X, startPoint.Y);
+                MBR.UpdateRect(endPoint.X, endPoint.Y);
                 for (int i = 1; i < polyline.PointList.Count - 1; i++)
                 {
                     if (polyline.PointList[i].OID != startPoint.PointID &&
                        polyline.PointList[i].OID != EndNode.PointID)
-                        MiddlePoint.Add(new TopoPoint(polyline.PointList[i], false));
+                    {
+                        TopoPoint midPoint = new TopoPoint(polyline.PointList[i], false);
+                        MiddlePoint.Add(midPoint);
+                        midPoint.TopologyArcs.Add(this);
+                    }
+                    MBR.UpdateRect(polyline.PointList[i].X, polyline.PointList[i].Y);
                 }
             }
             
@@ -48,12 +61,15 @@ namespace AGIS_work.DataStructure
         {
             this.ArcID = edge.EID;
             MiddlePoint = new List<TopoPoint>();
+            MBR = new MinBoundRect();
             TopoPoint startPoint = new TopoPoint(edge.StartPoint, true);
             startPoint.TopologyArcs.Add(this);
             this.BeginNode = startPoint;
             TopoPoint endPoint = new TopoPoint(edge.EndPoint, true);
             endPoint.TopologyArcs.Add(this);
             this.EndNode = endPoint;
+            MBR.UpdateRect(startPoint.X, startPoint.Y);
+            MBR.UpdateRect(endPoint.X, endPoint.Y);
         }
 
         public TopoPoint GetAnotherNode(TopoPoint p)
@@ -93,5 +109,6 @@ namespace AGIS_work.DataStructure
             return string.Format("ArcID:{0},StartID:{1},EndID:{2},MPointCount:{3}",
                 this.ArcID, this.BeginNode.PointID, this.EndNode.PointID, this.MiddlePoint.Count);
         }
+        
     }
 }

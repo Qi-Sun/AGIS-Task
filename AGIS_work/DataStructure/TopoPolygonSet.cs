@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -59,6 +60,27 @@ namespace AGIS_work.DataStructure
                     return polygon;
             }
             return null; 
+        }
+
+        public void SavePolygonTableToFile(string filename)
+        {
+            StreamWriter sw = new StreamWriter(filename);
+            sw.WriteLine(string.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}",
+                    "ID", "Pol_ID", "Arc_Num", "ArcIds", "OuterPol_ID", "InnerPol_ID", "LX", "LY", "RX", "RY"));
+            foreach (var polygon in TopoPolygonList)
+            {
+                string arcids = " "; 
+                foreach (var arc in polygon.TopologyArcs)
+                {
+                    arcids += arc.ArcID + ",";
+                }
+                sw.WriteLine(string.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}",
+                    polygon.innerId, polygon.PID, polygon.TopologyArcs.Count, arcids.Remove(arcids.Length - 1),
+                    (polygon.OuterPolygon == null) ? "NULL" : polygon.OuterPolygon.PID.ToString(),
+                    (polygon.InnerPolygons.Count == 0) ? "NULL" : polygon.InnerPolygons[0].PID.ToString(),
+                    polygon.MBR.MinX, polygon.MBR.MinY, polygon.MBR.MaxX, polygon.MBR.MaxY));
+            }
+            sw.Close();
         }
         
     }
